@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Paper,
@@ -9,7 +9,7 @@ import {
   Typography,
   InputAdornment,
   Divider,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Search,
   Filter,
@@ -18,11 +18,11 @@ import {
   Plus,
   MoreVertical,
   RefreshCw,
-  FileSpreadsheet
-} from 'lucide-react';
+  FileSpreadsheet,
+} from "lucide-react";
 
-import { TestCase, User, Project } from '../types';
-import Sidebar from './Sidebar';
+import { TestCase, User, Project } from "../types";
+import Sidebar from "../components/layout/Sidebar";
 // import { TestGrid } from './TestGrid';
 // import { UserManagementModal } from './UserManagementModal';
 
@@ -33,44 +33,74 @@ interface DashboardProps {
   onLogout?: () => void;
 }
 
-const Dashboard = ({ testCases, users, projects, onLogout }: DashboardProps) => {
-  const [searchQuery, setSearchQuery] = useState('');
+const Dashboard = ({
+  testCases,
+  users,
+  projects,
+  onLogout,
+}: DashboardProps) => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [showUserManagement, setShowUserManagement] = useState(false);
-  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [filterStatus, setFilterStatus] = useState<string>("all");
 
   const filteredTestCases = testCases.filter((tc) => {
     const matchesSearch =
       tc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       tc.id.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesFilter = filterStatus === 'all' || tc.status === filterStatus;
+    const matchesFilter = filterStatus === "all" || tc.status === filterStatus;
 
     return matchesSearch && matchesFilter;
   });
 
-  const passCount = testCases.filter((t) => t.status === 'pass').length;
-  const failCount = testCases.filter((t) => t.status === 'fail').length;
-  const inProgressCount = testCases.filter((t) => t.status === 'in-progress').length;
+  const passCount = testCases.filter((t) => t.status === "pass").length;
+  const failCount = testCases.filter((t) => t.status === "fail").length;
+  const inProgressCount = testCases.filter(
+    (t) => t.status === "in-progress",
+  ).length;
 
   return (
-    <Box sx={{ display: 'flex', height: '100vh', bgcolor: 'background.default' }}>
+    <Box
+      sx={{ display: "flex", height: "100vh", bgcolor: "background.default" }}
+    >
       <Sidebar
         projects={projects}
         // onOpenUserManagement={() => setShowUserManagement(true)}
         // onLogout={onLogout}
       />
 
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        }}
+      >
         {/* Header */}
-        <Paper elevation={0} sx={{ borderBottom: '1px solid', borderColor: 'divider', p: 3 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+        <Paper
+          elevation={0}
+          sx={{ borderBottom: "1px solid", borderColor: "divider", p: 3 }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 3,
+            }}
+          >
             <Box>
               <Typography variant="h4">Test Cases</Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ mt: 0.5 }}
+              >
                 iOS Authentication • {filteredTestCases.length} test cases
               </Typography>
             </Box>
-            <Box sx={{ display: 'flex', gap: 1.5 }}>
+            <Box sx={{ display: "flex", gap: 1.5 }}>
               <Button variant="outlined" startIcon={<RefreshCw size={16} />}>
                 Sync
               </Button>
@@ -81,7 +111,7 @@ const Dashboard = ({ testCases, users, projects, onLogout }: DashboardProps) => 
           </Box>
 
           {/* Search and Filters */}
-          <Box sx={{ display: 'flex', gap: 2 }}>
+          <Box sx={{ display: "flex", gap: 2 }}>
             <TextField
               fullWidth
               size="small"
@@ -97,7 +127,7 @@ const Dashboard = ({ testCases, users, projects, onLogout }: DashboardProps) => 
               }}
             />
 
-            <Box sx={{ display: 'flex', gap: 1.5 }}>
+            <Box sx={{ display: "flex", gap: 1.5 }}>
               <Select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
@@ -119,17 +149,43 @@ const Dashboard = ({ testCases, users, projects, onLogout }: DashboardProps) => 
         </Paper>
 
         {/* Toolbar */}
-        <Paper elevation={0} sx={{ borderBottom: '1px solid', borderColor: 'divider', px: 3, py: 1.5 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', gap: 1.5 }}>
-              <Button variant="outlined" size="small" startIcon={<Upload size={16} />}>
+        <Paper
+          elevation={0}
+          sx={{
+            borderBottom: "1px solid",
+            borderColor: "divider",
+            px: 3,
+            py: 1.5,
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box sx={{ display: "flex", gap: 1.5 }}>
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<Upload size={16} />}
+              >
                 Import Excel
               </Button>
-              <Button variant="outlined" size="small" startIcon={<Download size={16} />}>
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<Download size={16} />}
+              >
                 Export Excel
               </Button>
               <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
-              <Button variant="text" size="small" startIcon={<FileSpreadsheet size={16} />}>
+              <Button
+                variant="text"
+                size="small"
+                startIcon={<FileSpreadsheet size={16} />}
+              >
                 Bulk Edit
               </Button>
             </Box>
@@ -146,20 +202,53 @@ const Dashboard = ({ testCases, users, projects, onLogout }: DashboardProps) => 
         </Box> */}
 
         {/* Footer Stats */}
-        <Paper elevation={0} sx={{ borderTop: '1px solid', borderColor: 'divider', px: 3, py: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', gap: 4 }}>
+        <Paper
+          elevation={0}
+          sx={{ borderTop: "1px solid", borderColor: "divider", px: 3, py: 2 }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box sx={{ display: "flex", gap: 4 }}>
               <Typography variant="body2" color="text.secondary">
-                Total: <Box component="span" sx={{ color: 'text.primary', fontWeight: 600 }}>{testCases.length}</Box>
+                Total:{" "}
+                <Box
+                  component="span"
+                  sx={{ color: "text.primary", fontWeight: 600 }}
+                >
+                  {testCases.length}
+                </Box>
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Pass: <Box component="span" sx={{ color: 'success.main', fontWeight: 600 }}>{passCount}</Box>
+                Pass:{" "}
+                <Box
+                  component="span"
+                  sx={{ color: "success.main", fontWeight: 600 }}
+                >
+                  {passCount}
+                </Box>
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Fail: <Box component="span" sx={{ color: 'error.main', fontWeight: 600 }}>{failCount}</Box>
+                Fail:{" "}
+                <Box
+                  component="span"
+                  sx={{ color: "error.main", fontWeight: 600 }}
+                >
+                  {failCount}
+                </Box>
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                In Progress: <Box component="span" sx={{ color: 'primary.main', fontWeight: 600 }}>{inProgressCount}</Box>
+                In Progress:{" "}
+                <Box
+                  component="span"
+                  sx={{ color: "primary.main", fontWeight: 600 }}
+                >
+                  {inProgressCount}
+                </Box>
               </Typography>
             </Box>
             <Typography variant="body2" color="text.secondary">
@@ -172,10 +261,8 @@ const Dashboard = ({ testCases, users, projects, onLogout }: DashboardProps) => 
       {/* {showUserManagement && (
         <UserManagementModal users={users} onClose={() => setShowUserManagement(false)} />
       )} */}
-      
     </Box>
   );
-}
+};
 
 export default Dashboard;
-

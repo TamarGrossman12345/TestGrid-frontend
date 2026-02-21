@@ -44,23 +44,23 @@ const Sidebar = ({ projects }: { projects: Project[] }) => {
       variant="permanent"
       sx={{
         width: DRAWER_WIDTH,
-        "& .MuiDrawer-paper": { 
-          width: DRAWER_WIDTH, 
+        "& .MuiDrawer-paper": {
+          width: DRAWER_WIDTH,
           bgcolor: "#fafafa",
-          display: "flex", 
+          display: "flex",
           flexDirection: "column",
-          height: "100vh"
+          height: "100vh",
         },
       }}
     >
-  
       <Box sx={{ p: 3, pb: 1 }}>
-      
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 4 }}>
           <Box sx={{ bgcolor: "primary.main", p: 0.5, borderRadius: 1 }}>
             <FileText color="white" size={25} />
           </Box>
-          <Typography variant="h5" fontWeight="bold">TestGrid</Typography>
+          <Typography variant="h5" fontWeight="bold">
+            TestGrid
+          </Typography>
         </Box>
 
         <ListItemButton
@@ -88,14 +88,13 @@ const Sidebar = ({ projects }: { projects: Project[] }) => {
             fontWeight: "bold",
             fontSize: "0.85rem",
             display: "block",
-            mb: 1
+            mb: 1,
           }}
         >
           PROJECTS
         </Typography>
       </Box>
 
-      
       <Box sx={{ flexGrow: 1, overflowY: "auto", px: 2, mb: 1 }}>
         <List disablePadding>
           {projects.map((project) => (
@@ -105,17 +104,32 @@ const Sidebar = ({ projects }: { projects: Project[] }) => {
                 sx={{ borderRadius: 2 }}
               >
                 <ListItemIcon sx={{ minWidth: 35 }}>
-                  {openProject === project.id ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+                  {openProject === project.id ? (
+                    <ChevronDown size={18} />
+                  ) : (
+                    <ChevronRight size={18} />
+                  )}
                 </ListItemIcon>
-                <ListItemIcon sx={{ minWidth: 35 }}><Folder size={20} /></ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 35 }}>
+                  <Folder size={20} />
+                </ListItemIcon>
                 <ListItemText primary={project.name} />
               </ListItemButton>
 
-              <Collapse in={openProject === project.id} timeout="auto" unmountOnExit>
+              <Collapse
+                in={openProject === project.id}
+                timeout="auto"
+                unmountOnExit
+              >
                 <List component="div" disablePadding sx={{ pl: 4 }}>
                   {project.files.map((file) => (
-                    <ListItemButton key={file.id} sx={{ borderRadius: 2, py: 0.5 }}>
-                      <ListItemIcon sx={{ minWidth: 30 }}><FileText size={16} /></ListItemIcon>
+                    <ListItemButton
+                      key={file.id}
+                      sx={{ borderRadius: 2, py: 0.5 }}
+                    >
+                      <ListItemIcon sx={{ minWidth: 30 }}>
+                        <FileText size={16} />
+                      </ListItemIcon>
                       <ListItemText
                         primary={file.name}
                         slotProps={{ primary: { fontSize: "0.9rem" } }}
@@ -129,12 +143,11 @@ const Sidebar = ({ projects }: { projects: Project[] }) => {
         </List>
       </Box>
 
-
-      <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
+      <Box sx={{ borderTop: "1px solid", borderColor: "divider" }}>
         <ControlCenter />
       </Box>
     </Drawer>
   );
-}
+};
 
 export default Sidebar;
