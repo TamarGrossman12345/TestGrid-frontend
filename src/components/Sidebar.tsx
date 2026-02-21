@@ -16,10 +16,8 @@ import {
   ChevronRight,
   ChevronDown,
   LayoutDashboard,
-  Users,
-  Settings,
-  Plus,
 } from "lucide-react";
+import ControlCenter from "./ControlCenter";
 
 interface TestFile {
   id: string;
@@ -34,7 +32,7 @@ interface Project {
 
 const DRAWER_WIDTH = 300;
 
-export function Sidebar({ projects }: { projects: Project[] }) {
+const Sidebar = ({ projects }: { projects: Project[] }) => {
   const [openProject, setOpenProject] = useState<string | null>(null);
 
   const handleProjectClick = (id: string) => {
@@ -46,19 +44,25 @@ export function Sidebar({ projects }: { projects: Project[] }) {
       variant="permanent"
       sx={{
         width: DRAWER_WIDTH,
-        "& .MuiDrawer-paper": { width: DRAWER_WIDTH, bgcolor: "#fafafa" },
+        "& .MuiDrawer-paper": { 
+          width: DRAWER_WIDTH, 
+          bgcolor: "#fafafa",
+          display: "flex", 
+          flexDirection: "column",
+          height: "100vh"
+        },
       }}
     >
-      <Box sx={{ p: 3, display: "flex", alignItems: "center", gap: 2 }}>
-        <Box sx={{ bgcolor: "primary.main", p: 0.5, borderRadius: 1 }}>
-          <FileText color="white" size={25} />
+  
+      <Box sx={{ p: 3, pb: 1 }}>
+      
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 4 }}>
+          <Box sx={{ bgcolor: "primary.main", p: 0.5, borderRadius: 1 }}>
+            <FileText color="white" size={25} />
+          </Box>
+          <Typography variant="h5" fontWeight="bold">TestGrid</Typography>
         </Box>
-        <Typography variant="h5" fontWeight="bold">
-          TestGrid
-        </Typography>
-      </Box>
 
-      <List sx={{ px: 2 }}>
         <ListItemButton
           sx={{
             borderRadius: 2,
@@ -82,59 +86,55 @@ export function Sidebar({ projects }: { projects: Project[] }) {
             px: 2,
             color: "text.secondary",
             fontWeight: "bold",
-            fontSize: "1rem",
+            fontSize: "0.85rem",
+            display: "block",
+            mb: 1
           }}
         >
           PROJECTS
         </Typography>
+      </Box>
 
-        {projects.map((project) => (
-          <Box key={project.id} sx={{ mt: 1 }}>
-            <ListItemButton
-              onClick={() => handleProjectClick(project.id)}
-              sx={{ borderRadius: 2 }}
-            >
-              <ListItemIcon sx={{ minWidth: 35 }}>
-                {openProject === project.id ? (
-                  <ChevronDown size={18} />
-                ) : (
-                  <ChevronRight size={18} />
-                )}
-              </ListItemIcon>
-              <ListItemIcon sx={{ minWidth: 35 }}>
-                <Folder size={20} />
-              </ListItemIcon>
-              <ListItemText primary={project.name} />
-            </ListItemButton>
+      
+      <Box sx={{ flexGrow: 1, overflowY: "auto", px: 2, mb: 1 }}>
+        <List disablePadding>
+          {projects.map((project) => (
+            <Box key={project.id} sx={{ mt: 0.5 }}>
+              <ListItemButton
+                onClick={() => handleProjectClick(project.id)}
+                sx={{ borderRadius: 2 }}
+              >
+                <ListItemIcon sx={{ minWidth: 35 }}>
+                  {openProject === project.id ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+                </ListItemIcon>
+                <ListItemIcon sx={{ minWidth: 35 }}><Folder size={20} /></ListItemIcon>
+                <ListItemText primary={project.name} />
+              </ListItemButton>
 
-            {/* לופ פנימי על הקבצים - מופיע רק אם הפרויקט פתוח */}
-            <Collapse
-              in={openProject === project.id}
-              timeout="auto"
-              unmountOnExit
-            >
-              <List component="div" disablePadding sx={{ pl: 4 }}>
-                {project.files.map((file) => (
-                  <ListItemButton
-                    key={file.id}
-                    sx={{ borderRadius: 2, py: 0.5 }}
-                  >
-                    <ListItemIcon sx={{ minWidth: 30 }}>
-                      <FileText size={16} />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={file.name}
-                      slotProps={{
-                        primary: { fontSize: "0.9rem" },
-                      }}
-                    />
-                  </ListItemButton>
-                ))}
-              </List>
-            </Collapse>
-          </Box>
-        ))}
-      </List>
+              <Collapse in={openProject === project.id} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding sx={{ pl: 4 }}>
+                  {project.files.map((file) => (
+                    <ListItemButton key={file.id} sx={{ borderRadius: 2, py: 0.5 }}>
+                      <ListItemIcon sx={{ minWidth: 30 }}><FileText size={16} /></ListItemIcon>
+                      <ListItemText
+                        primary={file.name}
+                        slotProps={{ primary: { fontSize: "0.9rem" } }}
+                      />
+                    </ListItemButton>
+                  ))}
+                </List>
+              </Collapse>
+            </Box>
+          ))}
+        </List>
+      </Box>
+
+
+      <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
+        <ControlCenter />
+      </Box>
     </Drawer>
   );
 }
+
+export default Sidebar;

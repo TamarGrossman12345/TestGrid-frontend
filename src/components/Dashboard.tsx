@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 
 import { TestCase, User, Project } from '../types';
-import { Sidebar } from './Sidebar';
+import Sidebar from './Sidebar';
 // import { TestGrid } from './TestGrid';
 // import { UserManagementModal } from './UserManagementModal';
 
@@ -33,7 +33,7 @@ interface DashboardProps {
   onLogout?: () => void;
 }
 
-export function Dashboard({ testCases, users, projects, onLogout }: DashboardProps) {
+const Dashboard = ({ testCases, users, projects, onLogout }: DashboardProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showUserManagement, setShowUserManagement] = useState(false);
   const [filterStatus, setFilterStatus] = useState<string>('all');
@@ -176,3 +176,6 @@ export function Dashboard({ testCases, users, projects, onLogout }: DashboardPro
     </Box>
   );
 }
+
+export default Dashboard;
+
