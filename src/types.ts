@@ -18,11 +18,16 @@ export interface TestCase {
   status: TestStatus;
 }
 
+export interface TestFile {
+  id: string;
+  name: string;
+}
+
 export interface Project {
   id: string;
   name: string;
-  isPrivate: boolean;
-  children?: Project[];
+  files: TestFile[]; 
+  isPrivate?: boolean; 
 }
 
 export interface ActiveUser {

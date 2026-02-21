@@ -126,43 +126,31 @@ export const mockTestCases: TestCase[] = [
   }
 ];
 
-export const mockProjects: Project[] = [
+// אפשר לשים את זה בקובץ נפרד בשם mockData.ts או פשוט בתוך App.tsx
+export const MOCK_PROJECTS = [
   {
     id: 'p1',
-    name: 'Mobile App Testing',
-    isPrivate: false,
-    children: [
-      { id: 'p1-1', name: 'iOS Authentication', isPrivate: false },
-      { id: 'p1-2', name: 'Android Payment Flow', isPrivate: true }
-    ]
+    name: 'מערכת ניהול לקוחות (CRM)',
+    files: [
+      { id: 'f1', name: 'בדיקות לוגין ואבטחה' },
+      { id: 'f2', name: 'ניהול רשימת אנשי קשר' },
+      { id: 'f3', name: 'ייצוא דוחות אקסל' },
+    ],
   },
   {
     id: 'p2',
-    name: 'Web Platform',
-    isPrivate: false,
-    children: [
-      { id: 'p2-1', name: 'User Dashboard', isPrivate: false },
-      { id: 'p2-2', name: 'Admin Panel', isPrivate: true },
-      { id: 'p2-3', name: 'API Integration', isPrivate: false }
-    ]
+    name: 'אפליקציית Mobile - iOS',
+    files: [
+      { id: 'f4', name: 'תהליך הרשמה (Onboarding)' },
+      { id: 'f5', name: 'התראות פוש (Push Notifications)' },
+    ],
   },
   {
     id: 'p3',
-    name: 'API Testing',
-    isPrivate: true,
-    children: [
-      { id: 'p3-1', name: 'REST Endpoints', isPrivate: true },
-      { id: 'p3-2', name: 'GraphQL Queries', isPrivate: true }
-    ]
+    name: 'API - שרת תשלומים',
+    files: [
+      { id: 'f6', name: 'סליקת כרטיסי אשראי' },
+      { id: 'f7', name: 'בדיקות שגיאות שרת' },
+    ],
   },
-  {
-    id: 'p4',
-    name: 'Security Testing',
-    isPrivate: true
-  },
-  {
-    id: 'p5',
-    name: 'Performance Tests',
-    isPrivate: false
-  }
 ];

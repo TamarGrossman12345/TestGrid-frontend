@@ -30,7 +30,7 @@ interface DashboardProps {
   testCases: TestCase[];
   users: User[];
   projects: Project[];
-  onLogout: () => void;
+  onLogout?: () => void;
 }
 
 export function Dashboard({ testCases, users, projects, onLogout }: DashboardProps) {
@@ -56,8 +56,8 @@ export function Dashboard({ testCases, users, projects, onLogout }: DashboardPro
     <Box sx={{ display: 'flex', height: '100vh', bgcolor: 'background.default' }}>
       <Sidebar
         projects={projects}
-        onOpenUserManagement={() => setShowUserManagement(true)}
-        onLogout={onLogout}
+        // onOpenUserManagement={() => setShowUserManagement(true)}
+        // onLogout={onLogout}
       />
 
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>

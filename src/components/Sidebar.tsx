@@ -1,114 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Drawer,
   List,
-  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Collapse,
-  IconButton,
-  Divider,
   Typography,
-} from '@mui/material';
+  Divider,
+} from "@mui/material";
 import {
-  FolderOpen,
   Folder,
-  Lock,
-  Unlock,
+  FileText,
   ChevronRight,
   ChevronDown,
-  Plus,
   LayoutDashboard,
-  FileText,
   Users,
   Settings,
-  LogOut,
-} from 'lucide-react';
-import { Project } from '../types';
+  Plus,
+} from "lucide-react";
 
-interface SidebarProps {
-  projects: Project[];
-  onOpenUserManagement: () => void;
-  onLogout: () => void;
+interface TestFile {
+  id: string;
+  name: string;
 }
 
-const DRAWER_WIDTH = 260;
+interface Project {
+  id: string;
+  name: string;
+  files: TestFile[];
+}
 
-export function Sidebar({ projects, onOpenUserManagement, onLogout }: SidebarProps) {
-  const [expandedProjects, setExpandedProjects] = useState<Set<string>>(new Set(['p1', 'p2']));
-  const [selectedProject, setSelectedProject] = useState<string>('p1-1');
+const DRAWER_WIDTH = 300;
 
-  const toggleProject = (id: string) => {
-    const newExpanded = new Set(expandedProjects);
-    if (newExpanded.has(id)) {
-      newExpanded.delete(id);
-    } else {
-      newExpanded.add(id);
-    }
-    setExpandedProjects(newExpanded);
-  };
+export function Sidebar({ projects }: { projects: Project[] }) {
+  const [openProject, setOpenProject] = useState<string | null>(null);
 
-  const renderProject = (project: Project, level: number = 0) => {
-    const hasChildren = project.children && project.children.length > 0;
-    const isExpanded = expandedProjects.has(project.id);
-    const isSelected = selectedProject === project.id;
-
-    return (
-      <Box key={project.id}>
-        <ListItemButton
-          onClick={() => {
-            if (hasChildren) {
-              toggleProject(project.id);
-            }
-            setSelectedProject(project.id);
-          }}
-          selected={isSelected}
-          sx={{
-            pl: 1.5 + level * 2,
-            borderRadius: 1,
-            mb: 0.25,
-            '&.Mui-selected': {
-              bgcolor: 'primary.50',
-              color: 'primary.main',
-              '&:hover': {
-                bgcolor: 'primary.100',
-              },
-            },
-          }}
-        >
-          {hasChildren && (
-            <ListItemIcon sx={{ minWidth: 28 }}>
-              {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-            </ListItemIcon>
-          )}
-          {!hasChildren && <Box sx={{ width: 28 }} />}
-
-          <ListItemIcon sx={{ minWidth: 28 }}>
-            {isExpanded && hasChildren ? <FolderOpen size={16} /> : <Folder size={16} />}
-          </ListItemIcon>
-
-          <ListItemText
-            primary={project.name}
-            primaryTypographyProps={{
-              variant: 'body2',
-              noWrap: true,
-            }}
-          />
-
-          <ListItemIcon sx={{ minWidth: 20 }}>
-            {project.isPrivate ? <Lock size={14} /> : <Unlock size={14} />}
-          </ListItemIcon>
-        </ListItemButton>
-
-        {hasChildren && isExpanded && (
-          <Collapse in={isExpanded} timeout="auto">
-            {project.children!.map((child) => renderProject(child, level + 1))}
-          </Collapse>
-        )}
-      </Box>
-    );
+  const handleProjectClick = (id: string) => {
+    setOpenProject(openProject === id ? null : id);
   };
 
   return (
@@ -116,94 +46,95 @@ export function Sidebar({ projects, onOpenUserManagement, onLogout }: SidebarPro
       variant="permanent"
       sx={{
         width: DRAWER_WIDTH,
-        flexShrink: 0,
-        '& .MuiDrawer-paper': {
-          width: DRAWER_WIDTH,
-          boxSizing: 'border-box',
-          borderRight: '1px solid',
-          borderColor: 'divider',
-        },
+        "& .MuiDrawer-paper": { width: DRAWER_WIDTH, bgcolor: "#fafafa" },
       }}
     >
-      {/* Header */}
-      <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <Box
-            sx={{
-              width: 32,
-              height: 32,
-              bgcolor: 'primary.main',
-              borderRadius: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <FileText size={18} color="white" />
+      <Box sx={{ p: 3, display: "flex", alignItems: "center", gap: 2 }}>
+        <Box sx={{ bgcolor: "primary.main", p: 0.5, borderRadius: 1 }}>
+          <FileText color="white" size={25} />
+        </Box>
+        <Typography variant="h5" fontWeight="bold">
+          TestGrid
+        </Typography>
+      </Box>
+
+      <List sx={{ px: 2 }}>
+        <ListItemButton
+          sx={{
+            borderRadius: 2,
+            mb: 1,
+            bgcolor: "primary.main",
+            color: "white",
+            "&:hover": { bgcolor: "primary.dark" },
+          }}
+        >
+          <ListItemIcon sx={{ minWidth: 40, color: "inherit" }}>
+            <LayoutDashboard size={20} />
+          </ListItemIcon>
+          <ListItemText primary="Dashboard" />
+        </ListItemButton>
+
+        <Divider sx={{ my: 2 }} />
+
+        <Typography
+          variant="caption"
+          sx={{
+            px: 2,
+            color: "text.secondary",
+            fontWeight: "bold",
+            fontSize: "1rem",
+          }}
+        >
+          PROJECTS
+        </Typography>
+
+        {projects.map((project) => (
+          <Box key={project.id} sx={{ mt: 1 }}>
+            <ListItemButton
+              onClick={() => handleProjectClick(project.id)}
+              sx={{ borderRadius: 2 }}
+            >
+              <ListItemIcon sx={{ minWidth: 35 }}>
+                {openProject === project.id ? (
+                  <ChevronDown size={18} />
+                ) : (
+                  <ChevronRight size={18} />
+                )}
+              </ListItemIcon>
+              <ListItemIcon sx={{ minWidth: 35 }}>
+                <Folder size={20} />
+              </ListItemIcon>
+              <ListItemText primary={project.name} />
+            </ListItemButton>
+
+            {/* לופ פנימי על הקבצים - מופיע רק אם הפרויקט פתוח */}
+            <Collapse
+              in={openProject === project.id}
+              timeout="auto"
+              unmountOnExit
+            >
+              <List component="div" disablePadding sx={{ pl: 4 }}>
+                {project.files.map((file) => (
+                  <ListItemButton
+                    key={file.id}
+                    sx={{ borderRadius: 2, py: 0.5 }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 30 }}>
+                      <FileText size={16} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={file.name}
+                      slotProps={{
+                        primary: { fontSize: "0.9rem" },
+                      }}
+                    />
+                  </ListItemButton>
+                ))}
+              </List>
+            </Collapse>
           </Box>
-          <Typography variant="h6">TestGrid</Typography>
-        </Box>
-      </Box>
-
-      {/* Navigation */}
-      <Box sx={{ flexGrow: 1, overflow: 'auto', p: 1.5 }}>
-        <List disablePadding sx={{ mb: 3 }}>
-          <ListItemButton
-            sx={{
-              borderRadius: 1,
-              bgcolor: 'primary.main',
-              color: 'white',
-              '&:hover': {
-                bgcolor: 'primary.dark',
-              },
-            }}
-          >
-            <ListItemIcon sx={{ minWidth: 36, color: 'white' }}>
-              <LayoutDashboard size={16} />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" primaryTypographyProps={{ variant: 'body2' }} />
-          </ListItemButton>
-        </List>
-
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 1.5, mb: 1 }}>
-          <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 1 }}>
-            Projects
-          </Typography>
-          <IconButton size="small">
-            <Plus size={16} />
-          </IconButton>
-        </Box>
-
-        <List disablePadding>
-          {projects.map((project) => renderProject(project))}
-        </List>
-      </Box>
-
-      {/* Footer */}
-      <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
-        <List disablePadding sx={{ p: 1.5 }}>
-          <ListItemButton onClick={onOpenUserManagement} sx={{ borderRadius: 1, mb: 0.5 }}>
-            <ListItemIcon sx={{ minWidth: 36 }}>
-              <Users size={16} />
-            </ListItemIcon>
-            <ListItemText primary="Team Members" primaryTypographyProps={{ variant: 'body2' }} />
-          </ListItemButton>
-
-          <ListItemButton sx={{ borderRadius: 1, mb: 0.5 }}>
-            <ListItemIcon sx={{ minWidth: 36 }}>
-              <Settings size={16} />
-            </ListItemIcon>
-            <ListItemText primary="Settings" primaryTypographyProps={{ variant: 'body2' }} />
-          </ListItemButton>
-
-          <ListItemButton onClick={onLogout} sx={{ borderRadius: 1 }}>
-            <ListItemIcon sx={{ minWidth: 36 }}>
-              <LogOut size={16} />
-            </ListItemIcon>
-            <ListItemText primary="Sign Out" primaryTypographyProps={{ variant: 'body2' }} />
-          </ListItemButton>
-        </List>
-      </Box>
+        ))}
+      </List>
     </Drawer>
   );
 }
