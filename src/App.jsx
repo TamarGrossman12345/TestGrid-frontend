@@ -1,16 +1,19 @@
 import { Button, Container, Typography } from '@mui/material'
+import { Dashboard } from './components/Dashboard';
+import { mockTestCases, mockUsers, mockProjects } from './data/mockData';
+import { theme} from './theme'
 
 function App() {
   return (
+    <ThemeProvider theme={theme}>
     <Container>
-      <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
-        TestGrid Dashboard
-      </Typography>
-      <Button variant="contained" color="primary">
-      </Button>
-      <Button variant="outlined" color="secondary" sx={{ ml: 2 }}>
-      </Button>
+        <Dashboard
+          testCases={mockTestCases}
+          users={mockUsers}
+          projects={mockProjects}
+        />
     </Container>
+    </ThemeProvider>
   )
 }
 
