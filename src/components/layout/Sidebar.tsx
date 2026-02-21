@@ -14,6 +14,7 @@ import {
   Folder,
   FileText,
   ChevronRight,
+  LayoutGrid,
   ChevronDown,
   LayoutDashboard,
 } from "lucide-react";
@@ -55,8 +56,8 @@ const Sidebar = ({ projects }: { projects: Project[] }) => {
     >
       <Box sx={{ p: 3, pb: 1 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 4 }}>
-          <Box sx={{ bgcolor: "primary.main", p: 0.5, borderRadius: 1 }}>
-            <FileText color="white" size={25} />
+          <Box sx={{ bgcolor: "primary.main", p: 1, borderRadius: 5 , paddingBottom: 0.3}}>
+            <LayoutGrid color="white" size={22} />
           </Box>
           <Typography variant="h5" fontWeight="bold">
             TestGrid
