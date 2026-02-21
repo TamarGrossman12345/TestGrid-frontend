@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e91e63"/>
+      <stop offset="100%" stop-color="#880e4f"/>
+    </linearGradient>
+    <linearGradient id="innerCircleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8bbd0"/>
+      <stop offset="100%" stop-color="#f48fb1"/>
+    </linearGradient>
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/>
+      <feOffset dx="2" dy="2" result="offsetBlur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode in="offsetBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <g filter="url(#softShadow)">
+    <circle cx="256" cy="256" r="240" fill="url(#ringGradient)" stroke="#c2185b" stroke-width="10"/>
+
+    <circle cx="256" cy="256" r="180" fill="url(#innerCircleGradient)" stroke="#e91e63" stroke-width="5"/>
+
+    <path id="textPathUpper" d="M 100 256 A 156 156 0 1 1 412 256" fill="none"/>
+    <path id="textPathLower" d="M 412 256 A 156 156 0 1 1 100 256" fill="none"/>
+
+    <text fill="#ffffff" font-family="Arial, sans-serif" font-weight="bold" font-size="36" letter-spacing="2">
+      <textPath xlink:href="#textPathUpper" startOffset="50%" text-anchor="middle">TestGrid - QA Platform</textPath>
+    </text>
+    <text fill="#ffffff" font-family="Arial, sans-serif" font-weight="bold" font-size="36" letter-spacing="2">
+      <textPath xlink:href="#textPathLower" startOffset="50%" text-anchor="middle">TestGrid - QA Platform</textPath>
+    </text>
+
+    <path d="M 80 256 l 20 20 40 -40" stroke="#ffffff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 372 256 l 20 20 40 -40" stroke="#ffffff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <text x="256" y="280" fill="#c2185b" font-family="Arial, sans-serif" font-weight="900" font-size="180" text-anchor="middle" stroke="#e91e63" stroke-width="4">TG</text>
+  </g>
+</svg>
