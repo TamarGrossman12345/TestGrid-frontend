@@ -1,5 +1,5 @@
 import { Button, Container, Typography } from "@mui/material";
-import Dashboard from "./pages/Dashboard";
+import {WorkSpace} from "./pages/WorkSpace";
 import { mockTestCases, mockUsers, MOCK_PROJECTS } from "./data/mockData";
 import { theme } from "./theme/theme";
 import { ThemeProvider } from "@mui/material/styles";
@@ -7,13 +7,11 @@ import { ThemeProvider } from "@mui/material/styles";
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Container>
-        <Dashboard
+        <WorkSpace
           testCases={mockTestCases}
           users={mockUsers}
           projects={MOCK_PROJECTS}
         />
-      </Container>
     </ThemeProvider>
   );
 }
