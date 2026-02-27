@@ -12,7 +12,7 @@ import {
   
 } from "@mui/material";
 import { TestCase } from "../../types";
-import { Bold } from "lucide-react";
+
 
 interface TestGridProps {
   testCases: TestCase[];
@@ -48,12 +48,16 @@ const TestGrid = ({ testCases }: TestGridProps) => {
     borderColor: 'grey.200', 
     '&:last-child': {
       borderRight: 'none', 
+      wordBreak: "break-word",
     },
   };
 
   return (
     <TableContainer component={Paper} sx={{ boxShadow: "none", bgcolor: "transparent" }}>
-      <Table stickyHeader>
+      <Table stickyHeader sx={{ 
+          tableLayout: "fixed", // הקסם קורה כאן - מקבע את רוחב העמודות
+          width: "100%" 
+        }}>
         <TableHead>
           <TableRow>
             <TableCell sx={{ ...columnDivider, bgcolor: "grey.50", fontWeight: 600, width: 80 }}>ID</TableCell>
