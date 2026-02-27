@@ -3,11 +3,11 @@ import React, { useState, useMemo } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { RefreshCw, Plus } from "lucide-react";
 import Sidebar from "../components/layout/Sidebar";
-import  StatsFooter from "../components/Workspace/StatsFooter";
-import  FilterBar  from "../components/Workspace/FilterBar";
+import StatsFooter from "../components/Workspace/StatsFooter";
+import FilterBar from "../components/Workspace/FilterBar";
 import { TestCase, User, Project } from "../types";
-import  TestGrid from "../components/Workspace/TestGrid";
-import  NewTestDialog from "../components/Workspace/NewTestDialog";
+import TestGrid from "../components/Workspace/TestGrid";
+import NewTestDialog from "../components/Workspace/NewTestDialog";
 
 interface WorkSpaceProps {
   testCases: TestCase[];
@@ -20,6 +20,12 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [showNewTestDialog, setShowNewTestDialog] = useState(false);
+
+    const [openProject, setOpenProject] = useState<string | null>(null);
+
+  const handleProjectClick = (id: string) => {
+    setOpenProject(openProject === id ? null : id);
+  };
 
   const filteredTestCases = useMemo(() => {
     return testCases.filter((tc) => {
@@ -41,11 +47,17 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
     };
   }, [testCases]);
 
+  const activeProjectName = useMemo(() => {
+  if (!openProject) return "All Projects";
+  const project = projects.find(p => p.id === openProject);
+  return project?.name || "Unknown Project";
+}, [openProject, projects]); 
+
   return (
     <Box
       sx={{ display: "flex", height: "100vh", bgcolor: "background.default" }}
     >
-      <Sidebar projects={projects} />
+      <Sidebar projects={projects} openProject={openProject} handleProjectClick={handleProjectClick}/>
 
       <Box
         sx={{
@@ -68,10 +80,16 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
             <Typography variant="h4" fontWeight="bold">
               Test Cases
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {filteredTestCases.length} test cases found
-            </Typography>
+            <Box sx={{ display: "flex", gap: 1.5 }}>
+              <Typography variant="body2" color="text.secondary">
+                {activeProjectName} 
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {filteredTestCases.length} test cases found
+              </Typography>
+            </Box>
           </Box>
+
           <Box sx={{ display: "flex", gap: 1.5 }}>
             <Button variant="outlined" startIcon={<RefreshCw size={16} />}>
               Sync

@@ -35,13 +35,13 @@ interface Project {
 
 const DRAWER_WIDTH = 330;
 
-const Sidebar = ({ projects }: { projects: Project[] }) => {
-  const [openProject, setOpenProject] = useState<string | null>(null);
+interface SidebarProps {
+  projects: Project[];
+  openProject: string | null;
+  handleProjectClick: (id: string) => void;
+}
 
-  const handleProjectClick = (id: string) => {
-    setOpenProject(openProject === id ? null : id);
-  };
-
+const Sidebar = ({ projects, openProject, handleProjectClick }: SidebarProps) => {
   return (
     <Drawer
       variant="permanent"
