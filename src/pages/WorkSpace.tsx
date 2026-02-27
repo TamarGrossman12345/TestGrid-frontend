@@ -8,6 +8,7 @@ import FilterBar from "../components/Workspace/FilterBar";
 import { TestCase, User, Project } from "../types";
 import TestGrid from "../components/Workspace/TestGrid";
 import NewTestDialog from "../components/Workspace/NewTestDialog";
+import { NewProjectDialog } from "../components/Workspace/NewProjectDialog";
 
 interface WorkSpaceProps {
   testCases: TestCase[];
@@ -21,7 +22,17 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
   const [filterStatus, setFilterStatus] = useState("all");
   const [showNewTestDialog, setShowNewTestDialog] = useState(false);
 
-    const [openProject, setOpenProject] = useState<string | null>(null);
+  const [openProject, setOpenProject] = useState<string | null>(null);
+
+  const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
+  const [currentParentId, setCurrentParentId] = useState<string | undefined>(
+    undefined,
+  );
+
+  const handleOpenProjectDialog = (parentId?: string) => {
+    setCurrentParentId(parentId);
+    setIsProjectDialogOpen(true);
+  };
 
   const handleProjectClick = (id: string) => {
     setOpenProject(openProject === id ? null : id);
@@ -48,16 +59,35 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
   }, [testCases]);
 
   const activeProjectName = useMemo(() => {
-  if (!openProject) return "All Projects";
-  const project = projects.find(p => p.id === openProject);
-  return project?.name || "Unknown Project";
-}, [openProject, projects]); 
+    if (!openProject) return "All Projects";
+    const project = projects.find((p) => p.id === openProject);
+    return project?.name || "Unknown Project";
+  }, [openProject, projects]);
 
   return (
     <Box
       sx={{ display: "flex", height: "100vh", bgcolor: "background.default" }}
     >
-      <Sidebar projects={projects} openProject={openProject} handleProjectClick={handleProjectClick}/>
+      <Box sx={{ display: "flex" }}>
+        <Sidebar
+          projects={projects}
+          openProject={openProject}
+          handleProjectClick={handleProjectClick}
+          onAddNewProject={() => handleOpenProjectDialog()}
+          onAddNewFolder={(id) => handleOpenProjectDialog(id)}
+        />
+        {isProjectDialogOpen && (
+          <NewProjectDialog
+            parentId={currentParentId}
+            onClose={() => setIsProjectDialogOpen(false)}
+            onSave={(data) => {
+              // כאן את מוסיפים את הפרויקט/תיקייה לבסיס נתונים (שולחים לבאק)
+              console.log("Saving:", data);
+              setIsProjectDialogOpen(false);
+            }}
+          />
+        )}
+      </Box>
 
       <Box
         sx={{
@@ -82,7 +112,7 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
             </Typography>
             <Box sx={{ display: "flex", gap: 1.5 }}>
               <Typography variant="body2" color="text.secondary">
-                {activeProjectName} 
+                {activeProjectName}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 {filteredTestCases.length} test cases found

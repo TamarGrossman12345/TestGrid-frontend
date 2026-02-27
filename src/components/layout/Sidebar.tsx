@@ -39,9 +39,12 @@ interface SidebarProps {
   projects: Project[];
   openProject: string | null;
   handleProjectClick: (id: string) => void;
+  onAddNewProject: () => void;
+  onAddNewFolder: (projectId: string) => void;
+
 }
 
-const Sidebar = ({ projects, openProject, handleProjectClick }: SidebarProps) => {
+const Sidebar = ({ projects, openProject, handleProjectClick, onAddNewProject, onAddNewFolder}: SidebarProps) => {
   return (
     <Drawer
       variant="permanent"
@@ -63,10 +66,10 @@ const Sidebar = ({ projects, openProject, handleProjectClick }: SidebarProps) =>
               bgcolor: "primary.main",
               p: 1,
               borderRadius: 5,
-              paddingBottom: 0.3,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              
             }}
           >
             <LayoutGrid color="white" size={22} />
@@ -113,6 +116,7 @@ const Sidebar = ({ projects, openProject, handleProjectClick }: SidebarProps) =>
             PROJECTS
           </Typography>
           <IconButton
+            onClick={onAddNewProject}
             size="small"
             sx={{
               "&:hover": { bgcolor: "primary.light", color: "white" },
@@ -157,6 +161,7 @@ const Sidebar = ({ projects, openProject, handleProjectClick }: SidebarProps) =>
                   size="small"
                   onClick={(e) => {
                     e.stopPropagation();
+                    onAddNewFolder(project.id)
                     console.log("Create folder in:", project.name);
                   }}
                   sx={{

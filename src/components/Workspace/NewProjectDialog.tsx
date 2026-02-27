@@ -11,7 +11,6 @@ import {
   Typography,
   Slide,
 } from '@mui/material';
-import { TransitionProps } from '@mui/material/transitions';
 import { X, FolderPlus, Folder } from 'lucide-react';
 import { Project } from '../../types';
 
@@ -20,7 +19,6 @@ interface NewProjectDialogProps {
   onSave: (projectData: Project) => void;
   parentId?: string; // אם קיים, אנחנו יוצרים תיקייה בתוך פרויקט
 }
-
 
 
 export function NewProjectDialog({ onClose, onSave, parentId }: NewProjectDialogProps) {
