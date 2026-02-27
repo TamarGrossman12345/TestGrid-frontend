@@ -21,6 +21,7 @@ import {
   Plus,
 } from "lucide-react";
 import ControlCenter from "./ControlCenter";
+import { DRAWER_WIDTH } from "../../theme/theme";
 
 interface TestFile {
   id: string;
@@ -33,7 +34,7 @@ interface Project {
   files: TestFile[];
 }
 
-const DRAWER_WIDTH = 330;
+
 
 interface SidebarProps {
   projects: Project[];

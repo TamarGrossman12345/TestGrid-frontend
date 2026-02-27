@@ -9,9 +9,8 @@ import {
   Button,
   Box,
   Typography,
-  Slide,
 } from '@mui/material';
-import { X, FolderPlus, Folder } from 'lucide-react';
+import { X, FolderPlus, Folder, FileText } from 'lucide-react';
 import { Project } from '../../types';
 
 interface NewProjectDialogProps {
@@ -45,7 +44,7 @@ export function NewProjectDialog({ onClose, onSave, parentId }: NewProjectDialog
     <Dialog
       open
       onClose={onClose}
-      maxWidth="xs" // צר יותר, מושלם לשדות בודדים
+      maxWidth="xs" 
       fullWidth
       PaperProps={{ sx: { borderRadius: 3 } }}
     >
@@ -55,12 +54,12 @@ export function NewProjectDialog({ onClose, onSave, parentId }: NewProjectDialog
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               <Box sx={{ 
                 p: 1, 
-                bgcolor: isFolder ? 'secondary.light' : 'primary.light', 
+                bgcolor: 'primary.light', 
                 borderRadius: 1.5,
                 color: 'white',
                 display: 'flex' 
               }}>
-                {isFolder ? <Folder size={20} /> : <FolderPlus size={20} />}
+                {isFolder ? <FileText size={20} /> : <Folder size={20} />}
               </Box>
               <Typography variant="h6" fontWeight="700">
                 {isFolder ? 'Add New Folder' : 'New Project'}

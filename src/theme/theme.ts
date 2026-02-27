@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material/styles';
-
+export const DRAWER_WIDTH = 330;
 export const theme = createTheme({
   palette: {
     primary: {
