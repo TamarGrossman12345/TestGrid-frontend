@@ -9,6 +9,7 @@ import {
   Collapse,
   Typography,
   Divider,
+  IconButton,
 } from "@mui/material";
 import {
   Folder,
@@ -17,6 +18,7 @@ import {
   LayoutGrid,
   ChevronDown,
   LayoutDashboard,
+  Plus,
 } from "lucide-react";
 import ControlCenter from "./ControlCenter";
 
@@ -56,7 +58,14 @@ const Sidebar = ({ projects }: { projects: Project[] }) => {
     >
       <Box sx={{ p: 3, pb: 1 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 4 }}>
-          <Box sx={{ bgcolor: "primary.main", p: 1, borderRadius: 5 , paddingBottom: 0.3}}>
+          <Box
+            sx={{
+              bgcolor: "primary.main",
+              p: 1,
+              borderRadius: 5,
+              paddingBottom: 0.3,
+            }}
+          >
             <LayoutGrid color="white" size={22} />
           </Box>
           <Typography variant="h5" fontWeight="bold">
@@ -81,19 +90,29 @@ const Sidebar = ({ projects }: { projects: Project[] }) => {
 
         <Divider sx={{ my: 2 }} />
 
-        <Typography
-          variant="caption"
+        <Box
           sx={{
-            px: 2,
-            color: "text.secondary",
-            fontWeight: "bold",
-            fontSize: "0.85rem",
-            display: "block",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            px: 1,
             mb: 1,
           }}
         >
-          PROJECTS
-        </Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              color: "text.secondary",
+              fontWeight: "bold",
+              fontSize: "0.85rem",
+            }}
+          >
+            PROJECTS
+          </Typography>
+          <IconButton size="small">
+            <Plus size={16} />
+          </IconButton>
+        </Box>
       </Box>
 
       <Box sx={{ flexGrow: 1, overflowY: "auto", px: 2, mb: 1 }}>

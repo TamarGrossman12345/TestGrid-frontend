@@ -9,7 +9,13 @@ import {
   Paper,
   Divider,
 } from "@mui/material";
-import { Search, Filter, Upload, Download } from "lucide-react";
+import {
+  Search,
+  Filter,
+  Upload,
+  Download,
+  FileSpreadsheet,
+} from "lucide-react";
 
 interface FilterBarProps {
   searchQuery: string;
@@ -71,11 +77,10 @@ export const FilterBar = ({
             minWidth: 140,
             color: "primary.main",
             borderColor: "primary.main",
-        
+
             "&:hover": {
               borderColor: "primary.main",
               bgcolor: "primary.50",
-             
             },
           }}
         >
@@ -84,10 +89,23 @@ export const FilterBar = ({
           <MenuItem value="fail">Fail</MenuItem>
           <MenuItem value="in-progress">In Progress</MenuItem>
         </Select>
-
       </Box>
 
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+        <Button
+          variant="text"
+          size="small"
+          startIcon={<FileSpreadsheet size={16} />}
+        >
+          Bulk Edit
+        </Button>
+        
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{ height: 24, my: "auto", mx: 0.9 }}
+        />
+
         <Button
           variant="text"
           size="small"
@@ -96,11 +114,10 @@ export const FilterBar = ({
         >
           Import
         </Button>
-
         <Divider
           orientation="vertical"
           flexItem
-          sx={{ height: 24, my: "auto", mx: 0.5 }}
+          sx={{ height: 24, my: "auto", mx: 0.9 }}
         />
 
         <Button

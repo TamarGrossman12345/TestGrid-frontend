@@ -6,6 +6,7 @@ import Sidebar from "../components/layout/Sidebar";
 import { StatsFooter } from "../components/Workspace/StatsFooter";
 import { FilterBar } from "../components/Workspace/FilterBar";
 import { TestCase, User, Project } from "../types";
+import { TestGrid } from "../components/Workspace/TestGrid";
 
 interface WorkSpaceProps {
   testCases: TestCase[];
@@ -20,52 +21,75 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
   // לוגיקת סינון - משתמשים ב-useMemo כדי לא לחשב מחדש סתם
   const filteredTestCases = useMemo(() => {
     return testCases.filter((tc) => {
-      const matchesSearch = tc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            tc.id.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesFilter = filterStatus === "all" || tc.status === filterStatus;
+      const matchesSearch =
+        tc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        tc.id.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesFilter =
+        filterStatus === "all" || tc.status === filterStatus;
       return matchesSearch && matchesFilter;
     });
   }, [testCases, searchQuery, filterStatus]);
 
-  // הכנת נתונים לפוטר
-  const stats = {
-    total: testCases.length,
-    pass: testCases.filter(t => t.status === "pass").length,
-    fail: testCases.filter(t => t.status === "fail").length,
-    inProgress: testCases.filter(t => t.status === "in-progress").length,
-  };
+  const stats = useMemo(() => {
+    return {
+      total: testCases.length,
+      pass: testCases.filter((t) => t.status === "pass").length,
+      fail: testCases.filter((t) => t.status === "fail").length,
+      inProgress: testCases.filter((t) => t.status === "in-progress").length,
+    };
+  }, [testCases]);
 
   return (
-    <Box sx={{ display: "flex", height: "100vh", bgcolor: "background.default" }}>
+    <Box
+      sx={{ display: "flex", height: "100vh", bgcolor: "background.default" }}
+    >
       <Sidebar projects={projects} />
 
-      <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        
-        {/* Header - אפשר גם אותו להוציא לקומפוננטה אם רוצים */}
-        <Box sx={{ p: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' , paddingBottom:1}}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        }}
+      >
+        <Box
+          sx={{
+            p: 3,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingBottom: 1,
+          }}
+        >
           <Box>
-            <Typography variant="h4" fontWeight="bold">Test Cases</Typography>
+            <Typography variant="h4" fontWeight="bold">
+              Test Cases
+            </Typography>
             <Typography variant="body2" color="text.secondary">
-               {filteredTestCases.length} test cases found
+              {filteredTestCases.length} test cases found
             </Typography>
           </Box>
           <Box sx={{ display: "flex", gap: 1.5 }}>
-            <Button variant="outlined" startIcon={<RefreshCw size={16} />}>Sync</Button>
-            <Button variant="contained" startIcon={<Plus size={16} />}>New Test</Button>
+            <Button variant="outlined" startIcon={<RefreshCw size={16} />}>
+              Sync
+            </Button>
+
+            <Button variant="contained" startIcon={<Plus size={16} />}>
+              New Test
+            </Button>
           </Box>
         </Box>
 
-        <FilterBar 
-          searchQuery={searchQuery} 
+        <FilterBar
+          searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           filterStatus={filterStatus}
           setFilterStatus={setFilterStatus}
         />
 
-   
         <Box sx={{ flexGrow: 1, overflow: "auto", p: 3 }}>
-      
-          
+          <TestGrid testCases={filteredTestCases} />
         </Box>
 
         <StatsFooter {...stats} />
