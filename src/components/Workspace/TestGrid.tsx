@@ -41,7 +41,7 @@ const getStatusLabel = (status: string) => {
   return labels[status] || status;
 };
 
-export function TestGrid({ testCases }: TestGridProps) {
+const TestGrid = ({ testCases }: TestGridProps) => {
   
   const columnDivider = {
     borderRight: '1px solid',
@@ -100,3 +100,5 @@ export function TestGrid({ testCases }: TestGridProps) {
     </TableContainer>
   );
 }
+
+export default TestGrid;

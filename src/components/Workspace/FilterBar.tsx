@@ -24,7 +24,7 @@ interface FilterBarProps {
   setFilterStatus: (val: string) => void;
 }
 
-export const FilterBar = ({
+const FilterBar = ({
   searchQuery,
   setSearchQuery,
   filterStatus,
@@ -132,3 +132,5 @@ export const FilterBar = ({
     </Box>
   </Paper>
 );
+
+export default FilterBar;

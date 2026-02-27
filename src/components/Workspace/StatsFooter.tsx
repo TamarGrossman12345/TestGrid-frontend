@@ -9,7 +9,7 @@ interface StatsFooterProps {
   inProgress: number;
 }
 
-export const StatsFooter = ({ total, pass, fail, inProgress }: StatsFooterProps) => (
+ const StatsFooter = ({ total, pass, fail, inProgress }: StatsFooterProps) => (
   <Paper elevation={0} sx={{ borderTop: "1px solid", borderColor: "divider", px: 4, py: 2 }}>
     <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
       <Box sx={{ display: "flex", gap: 4 }}>
@@ -34,3 +34,6 @@ export const StatsFooter = ({ total, pass, fail, inProgress }: StatsFooterProps)
     </Box>
   </Paper>
 );
+
+
+export default StatsFooter;

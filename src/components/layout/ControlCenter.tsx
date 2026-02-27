@@ -17,7 +17,7 @@ interface ControlCenterProps {
   onLogout?: () => void;
 }
 
-export const ControlCenter = ({ onOpenUserManagement, onLogout }: ControlCenterProps) => {
+ const ControlCenter = ({ onOpenUserManagement, onLogout }: ControlCenterProps) => {
   return (
     <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
         <List disablePadding sx={{ p: 1.5 }}>

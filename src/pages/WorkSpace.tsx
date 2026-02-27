@@ -1,12 +1,13 @@
 // src/pages/Dashboard.tsx
 import React, { useState, useMemo } from "react";
-import { Box, Paper, Typography, Button } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import { RefreshCw, Plus } from "lucide-react";
 import Sidebar from "../components/layout/Sidebar";
-import { StatsFooter } from "../components/Workspace/StatsFooter";
-import { FilterBar } from "../components/Workspace/FilterBar";
+import  StatsFooter from "../components/Workspace/StatsFooter";
+import  FilterBar  from "../components/Workspace/FilterBar";
 import { TestCase, User, Project } from "../types";
-import { TestGrid } from "../components/Workspace/TestGrid";
+import  TestGrid from "../components/Workspace/TestGrid";
+import  NewTestDialog from "../components/Workspace/NewTestDialog";
 
 interface WorkSpaceProps {
   testCases: TestCase[];
@@ -15,10 +16,11 @@ interface WorkSpaceProps {
 }
 
 export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
+  const [NewTestCases, setNewTestCases] = useState(testCases); // סטייט שנועד כדי לסנכרן את הטבלה כשמוסיפים טסט חדש בדילאוגג
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [showNewTestDialog, setShowNewTestDialog] = useState(true);
 
-  // לוגיקת סינון - משתמשים ב-useMemo כדי לא לחשב מחדש סתם
   const filteredTestCases = useMemo(() => {
     return testCases.filter((tc) => {
       const matchesSearch =
@@ -75,7 +77,11 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
               Sync
             </Button>
 
-            <Button variant="contained" startIcon={<Plus size={16} />}>
+            <Button
+              variant="contained"
+              onClick={() => setShowNewTestDialog(true)}
+              startIcon={<Plus size={16} />}
+            >
               New Test
             </Button>
           </Box>
@@ -94,6 +100,9 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
 
         <StatsFooter {...stats} />
       </Box>
+      {showNewTestDialog && (
+        <NewTestDialog onClose={() => setShowNewTestDialog(false)} />
+      )}
     </Box>
   );
 };
