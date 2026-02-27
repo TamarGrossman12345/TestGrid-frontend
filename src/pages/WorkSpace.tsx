@@ -19,7 +19,7 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
   const [NewTestCases, setNewTestCases] = useState(testCases); // סטייט שנועד כדי לסנכרן את הטבלה כשמוסיפים טסט חדש בדילאוגג
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [showNewTestDialog, setShowNewTestDialog] = useState(true);
+  const [showNewTestDialog, setShowNewTestDialog] = useState(false);
 
   const filteredTestCases = useMemo(() => {
     return testCases.filter((tc) => {

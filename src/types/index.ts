@@ -26,6 +26,7 @@ export interface TestFile {
 export interface Project {
   id: string;
   name: string;
+  description?: string;
   files: TestFile[]; 
   isPrivate?: boolean; 
 }

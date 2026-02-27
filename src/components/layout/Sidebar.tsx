@@ -33,7 +33,7 @@ interface Project {
   files: TestFile[];
 }
 
-const DRAWER_WIDTH = 300;
+const DRAWER_WIDTH = 330;
 
 const Sidebar = ({ projects }: { projects: Project[] }) => {
   const [openProject, setOpenProject] = useState<string | null>(null);
@@ -64,6 +64,9 @@ const Sidebar = ({ projects }: { projects: Project[] }) => {
               p: 1,
               borderRadius: 5,
               paddingBottom: 0.3,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <LayoutGrid color="white" size={22} />
@@ -109,7 +112,13 @@ const Sidebar = ({ projects }: { projects: Project[] }) => {
           >
             PROJECTS
           </Typography>
-          <IconButton size="small">
+          <IconButton
+            size="small"
+            sx={{
+              "&:hover": { bgcolor: "primary.light", color: "white" },
+              p: 0.5,
+            }}
+          >
             <Plus size={16} />
           </IconButton>
         </Box>
@@ -118,10 +127,17 @@ const Sidebar = ({ projects }: { projects: Project[] }) => {
       <Box sx={{ flexGrow: 1, overflowY: "auto", px: 2, mb: 1 }}>
         <List disablePadding>
           {projects.map((project) => (
-            <Box key={project.id} sx={{ mt: 0.5 }}>
+            <Box key={project.id} sx={{ mb: 0.5 }}>
               <ListItemButton
                 onClick={() => handleProjectClick(project.id)}
-                sx={{ borderRadius: 2 }}
+                sx={{
+                  borderRadius: 2,
+                  p: 0.5,
+                  "&:hover .add-folder-btn": {
+                    opacity: 1,
+                    visibility: "visible",
+                  },
+                }}
               >
                 <ListItemIcon sx={{ minWidth: 35 }}>
                   {openProject === project.id ? (
@@ -133,7 +149,26 @@ const Sidebar = ({ projects }: { projects: Project[] }) => {
                 <ListItemIcon sx={{ minWidth: 35 }}>
                   <Folder size={20} />
                 </ListItemIcon>
+
                 <ListItemText primary={project.name} />
+
+                <IconButton
+                  className="add-folder-btn"
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    console.log("Create folder in:", project.name);
+                  }}
+                  sx={{
+                    opacity: 0,
+                    visibility: "hidden",
+                    transition: "all 0.2s ease-in-out",
+                    "&:hover": { bgcolor: "primary.light", color: "white" },
+                    p: 0.5,
+                  }}
+                >
+                  <Plus size={14} />
+                </IconButton>
               </ListItemButton>
 
               <Collapse
@@ -141,7 +176,7 @@ const Sidebar = ({ projects }: { projects: Project[] }) => {
                 timeout="auto"
                 unmountOnExit
               >
-                <List component="div" disablePadding sx={{ pl: 4 }}>
+                <List component="div" disablePadding sx={{ pl: 5 }}>
                   {project.files.map((file) => (
                     <ListItemButton
                       key={file.id}
@@ -152,7 +187,12 @@ const Sidebar = ({ projects }: { projects: Project[] }) => {
                       </ListItemIcon>
                       <ListItemText
                         primary={file.name}
-                        slotProps={{ primary: { fontSize: "0.9rem" } }}
+                        slotProps={{
+                          primary: {
+                            fontSize: "0.9rem",
+                            color: "text.secondary",
+                          },
+                        }}
                       />
                     </ListItemButton>
                   ))}
