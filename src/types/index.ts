@@ -21,11 +21,12 @@ export interface TestCase {
 export interface TestFile {
   id: string;
   name: string;
+  testCases: TestCase[];
 }
 
 export interface Project {
   id: string;
-  name: string;
+  projectName: string;
   description?: string;
   files: TestFile[]; 
   isPrivate?: boolean; 

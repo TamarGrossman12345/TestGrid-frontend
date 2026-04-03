@@ -61,7 +61,7 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
   const activeProjectName = useMemo(() => {
     if (!openProject) return "All Projects";
     const project = projects.find((p) => p.id === openProject);
-    return project?.name || "Unknown Project";
+    return project?.projectName || "Unknown Project";
   }, [openProject, projects]);
 
   return (

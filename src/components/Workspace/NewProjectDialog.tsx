@@ -30,7 +30,7 @@ export function NewProjectDialog({ onClose, onSave, parentId }: NewProjectDialog
     e.preventDefault();
     const newProject: Project = {
       id: `p${Math.floor(Math.random() * 10000)}`,
-      name,
+      projectName: name,
       description,
       isPrivate: false,
       files: [],

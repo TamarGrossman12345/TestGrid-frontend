@@ -22,18 +22,7 @@ import {
 } from "lucide-react";
 import ControlCenter from "./ControlCenter";
 import { DRAWER_WIDTH } from "../../theme/theme";
-
-interface TestFile {
-  id: string;
-  name: string;
-}
-
-interface Project {
-  id: string;
-  name: string;
-  files: TestFile[];
-}
-
+import {TestFile, Project} from "../../types/index";
 
 
 interface SidebarProps {
@@ -155,7 +144,7 @@ const Sidebar = ({ projects, openProject, handleProjectClick, onAddNewProject, o
                   <Folder size={20} />
                 </ListItemIcon>
 
-                <ListItemText primary={project.name} />
+                <ListItemText primary={project.projectName} />
 
                 <IconButton
                   className="add-folder-btn"
@@ -163,7 +152,7 @@ const Sidebar = ({ projects, openProject, handleProjectClick, onAddNewProject, o
                   onClick={(e) => {
                     e.stopPropagation();
                     onAddNewFolder(project.id)
-                    console.log("Create folder in:", project.name);
+                    console.log("Create folder in:", project.projectName);
                   }}
                   sx={{
                     opacity: 0,
@@ -183,7 +172,7 @@ const Sidebar = ({ projects, openProject, handleProjectClick, onAddNewProject, o
                 unmountOnExit
               >
                 <List component="div" disablePadding sx={{ pl: 5 }}>
-                  {project.files.map((file) => (
+                  {project.files?.map((file) => (
                     <ListItemButton
                       key={file.id}
                       sx={{ borderRadius: 2, py: 0.5 }}
