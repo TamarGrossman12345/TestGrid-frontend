@@ -13,14 +13,14 @@ import {
 import { X, FolderPlus, Folder, FileText } from 'lucide-react';
 import { Project } from '../../types';
 
-interface NewProjectDialogProps {
+interface NewProjectAndFolderDialogProps {
   onClose: () => void;
   onSave: (projectData: Project) => void;
   projectId?: string; // אם קיים, אנחנו יוצרים תיקייה בתוך פרויקט
 }
 
 
-export function NewProjectDialog({ onClose, onSave, projectId }: NewProjectDialogProps) {
+ function NewProjectAndFolderDialog({ onClose, onSave, projectId }: NewProjectAndFolderDialogProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
@@ -105,3 +105,5 @@ export function NewProjectDialog({ onClose, onSave, projectId }: NewProjectDialo
     </Dialog>
   );
 }
+
+export default  NewProjectAndFolderDialog;

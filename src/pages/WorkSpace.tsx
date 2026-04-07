@@ -8,7 +8,7 @@ import FilterBar from "../components/Workspace/FilterBar";
 import { TestCase, User, Project } from "../types";
 import TestGrid from "../components/Workspace/TestGrid";
 import NewTestDialog from "../components/Workspace/NewTestDialog";
-import { NewProjectDialog } from "../components/Workspace/NewProjectDialog";
+import NewProjectAndFolderDialog from "../components/Workspace/NewProjectAndFolderDialog";
 
 interface WorkSpaceProps {
   testCases: TestCase[];
@@ -78,7 +78,7 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
           onAddNewFolder={(id) => handleOpenProjectDialog(id)}
         />
         {isProjectDialogOpen && (
-          <NewProjectDialog
+          <NewProjectAndFolderDialog
             projectId={activeProjectId}
             onClose={() => setIsProjectDialogOpen(false)}
             onSave={(data) => {
