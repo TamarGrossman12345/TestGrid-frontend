@@ -17,7 +17,13 @@ interface WorkSpaceProps {
   onRefreshProjects: () => Promise<void>;
 }
 
-export const WorkSpace = ({ testCases, users, projects, onRefreshProjects }: WorkSpaceProps) => {
+
+export const WorkSpace = ({
+  testCases,
+  users,
+  projects,
+  onRefreshProjects,
+}: WorkSpaceProps) => {
   const [NewTestCases, setNewTestCases] = useState(testCases); // סטייט שנועד כדי לסנכרן את הטבלה כשמוסיפים טסט חדש בדילאוגג
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -35,31 +41,37 @@ export const WorkSpace = ({ testCases, users, projects, onRefreshProjects }: Wor
     setIsProjectDialogOpen(true);
   };
 
-  const handleCreateProjectAndFolder = async (name: string, description: string, projectId?: string) => {
+  const handleCreateProjectAndFolder = async (
+    name: string,
+    description: string,
+    projectId?: string,
+  ) => {
+    const url = projectId
+      ? 'http://localhost:5000/files'
+      : 'http://localhost:5000/projects';
 
-    setIsProjectDialogOpen(false);
-    const url = projectId ? 'http://localhost:5000/files' : 'http://localhost:5000/projects';
-
-    const bodyData = projectId 
-  ? { name, description, projectId } 
-  : { projectName: name, description }; 
+    const bodyData = projectId
+      ? { name, description, projectId }
+      : { projectName: name, description };
 
     try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(bodyData)
-    });
-    
-    if (response.ok) {
-    setIsProjectDialogOpen(false);
-     await onRefreshProjects();
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bodyData),
+      });
+
+      if (response.ok) {
+        setIsProjectDialogOpen(false);
+        await onRefreshProjects();
+      } else {
+        // i can add here a notification when the saving is fail
+        console.error("Server returned an error:", response.statusText);
+      }
+    } catch (err) {
+      console.error("Error creating folder/project", err);
     }
-  } catch (err) {
-    console.error("Error creating folder/project", err);
-  }
-};
-  
+  };
 
   const handleProjectClick = (id: string) => {
     setOpenProject(openProject === id ? null : id);
@@ -69,7 +81,7 @@ export const WorkSpace = ({ testCases, users, projects, onRefreshProjects }: Wor
     return testCases.filter((tc) => {
       const matchesSearch =
         tc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        tc.TestCaseId .toLowerCase().includes(searchQuery.toLowerCase());
+        tc.TestCaseId.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesFilter =
         filterStatus === "all" || tc.status === filterStatus;
       return matchesSearch && matchesFilter;

@@ -1,6 +1,6 @@
 import { Button, Container, Typography } from "@mui/material";
 import {WorkSpace} from "./pages/WorkSpace";
-import { mockTestCases, mockUsers, MOCK_PROJECTS } from "./data/mockData";
+import { mockTestCases, mockUsers } from "./data/mockData";
 import { theme } from "./theme/theme";
 import { ThemeProvider } from "@mui/material/styles";
 import { useEffect, useState } from "react";
