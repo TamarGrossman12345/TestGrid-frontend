@@ -15,9 +15,11 @@ import { Project } from '../../types';
 
 interface NewProjectAndFolderDialogProps {
   onClose: () => void;
-  onSave: (projectData: Project) => void;
+  onSave: (name: string, description: string, projectId?: string) => void;
   projectId?: string; // אם קיים, אנחנו יוצרים תיקייה בתוך פרויקט
 }
+
+
 
 
  function NewProjectAndFolderDialog({ onClose, onSave, projectId }: NewProjectAndFolderDialogProps) {
@@ -28,16 +30,9 @@ interface NewProjectAndFolderDialogProps {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newProject: Project = {
-      projectId: `p${Math.floor(Math.random() * 10000)}`,
-      projectName: name,
-      description,
-      isPrivate: false,
-      files: [],
-      // כאן השרת שלך ידע לשייך ל-projectId אם הוא קיים
-    };
-    onSave(newProject);
+    onSave(name, description, projectId);
     onClose();
+
   };
 
   return (

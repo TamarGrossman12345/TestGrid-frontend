@@ -14,9 +14,10 @@ interface WorkSpaceProps {
   testCases: TestCase[];
   users: User[];
   projects: Project[];
+  onRefreshProjects: () => Promise<void>;
 }
 
-export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
+export const WorkSpace = ({ testCases, users, projects, onRefreshProjects }: WorkSpaceProps) => {
   const [NewTestCases, setNewTestCases] = useState(testCases); // סטייט שנועד כדי לסנכרן את הטבלה כשמוסיפים טסט חדש בדילאוגג
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -34,6 +35,31 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
     setIsProjectDialogOpen(true);
   };
 
+  const handleCreateProjectAndFolder = async (name: string, description: string, projectId?: string) => {
+
+    setIsProjectDialogOpen(false);
+    const url = projectId ? 'http://localhost:5000/files' : 'http://localhost:5000/projects';
+
+    const bodyData = projectId 
+  ? { name, description, projectId } 
+  : { projectName: name, description }; 
+
+    try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(bodyData)
+    });
+    
+    if (response.ok) {
+    setIsProjectDialogOpen(false);
+     await onRefreshProjects();
+    }
+  } catch (err) {
+    console.error("Error creating folder/project", err);
+  }
+};
+  
 
   const handleProjectClick = (id: string) => {
     setOpenProject(openProject === id ? null : id);
@@ -81,11 +107,7 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
           <NewProjectAndFolderDialog
             projectId={activeProjectId}
             onClose={() => setIsProjectDialogOpen(false)}
-            onSave={(data) => {
-              // כאן את מוסיפים את הפרויקט/תיקייה לבסיס נתונים (שולחים לבאק)
-              console.log("Saving:", data);
-              setIsProjectDialogOpen(false);
-            }}
+            onSave={handleCreateProjectAndFolder}
           />
         )}
       </Box>

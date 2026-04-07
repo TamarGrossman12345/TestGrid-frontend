@@ -24,7 +24,7 @@ function App() {
 
   useEffect(() => {
     fetchProjects();
-  }, [projects]);
+  }, []);
   
   return (
     <ThemeProvider theme={theme}>
@@ -32,6 +32,7 @@ function App() {
           testCases={mockTestCases}
           users={mockUsers}
           projects={projects}
+          onRefreshProjects={fetchProjects}
         />
     </ThemeProvider>
   );
