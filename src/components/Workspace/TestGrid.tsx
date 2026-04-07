@@ -69,9 +69,9 @@ const TestGrid = ({ testCases }: TestGridProps) => {
         </TableHead>
         <TableBody>
           {testCases.map((testCase) => (
-            <TableRow key={testCase.id} sx={{ "&:hover": { bgcolor: "action.hover" } }}>
+            <TableRow key={testCase.TestCaseId } sx={{ "&:hover": { bgcolor: "action.hover" } }}>
               <TableCell sx={columnDivider}>
-                <Typography variant="body2">{testCase.id}</Typography>
+                <Typography variant="body2">{testCase.TestCaseId }</Typography>
               </TableCell>
 
               <TableCell sx={columnDivider}>

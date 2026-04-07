@@ -16,25 +16,25 @@ import { Project } from '../../types';
 interface NewProjectDialogProps {
   onClose: () => void;
   onSave: (projectData: Project) => void;
-  parentId?: string; // אם קיים, אנחנו יוצרים תיקייה בתוך פרויקט
+  projectId?: string; // אם קיים, אנחנו יוצרים תיקייה בתוך פרויקט
 }
 
 
-export function NewProjectDialog({ onClose, onSave, parentId }: NewProjectDialogProps) {
+export function NewProjectDialog({ onClose, onSave, projectId }: NewProjectDialogProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
-  const isFolder = Boolean(parentId);
+  const isFolder = Boolean(projectId);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newProject: Project = {
-      id: `p${Math.floor(Math.random() * 10000)}`,
+      projectId: `p${Math.floor(Math.random() * 10000)}`,
       projectName: name,
       description,
       isPrivate: false,
       files: [],
-      // כאן השרת שלך ידע לשייך ל-parentId אם הוא קיים
+      // כאן השרת שלך ידע לשייך ל-projectId אם הוא קיים
     };
     onSave(newProject);
     onClose();

@@ -10,7 +10,7 @@ export interface User {
 }
 
 export interface TestCase {
-  id: string;
+  TestCaseId : string;
   title: string;
   testSteps: string;
   expectedResult: string;
@@ -19,13 +19,13 @@ export interface TestCase {
 }
 
 export interface TestFile {
-  id: string;
+  TestFileId: string;
   name: string;
   testCases: TestCase[];
 }
 
 export interface Project {
-  id: string;
+  projectId: string;
   projectName: string;
   description?: string;
   files: TestFile[]; 

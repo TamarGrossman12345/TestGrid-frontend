@@ -25,14 +25,15 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
   const [openProject, setOpenProject] = useState<string | null>(null);
 
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
-  const [currentParentId, setCurrentParentId] = useState<string | undefined>(
+  const [activeProjectId, setActiveProjectId] = useState<string | undefined>(
     undefined,
   );
 
-  const handleOpenProjectDialog = (parentId?: string) => {
-    setCurrentParentId(parentId);
+  const handleOpenProjectDialog = (projectId?: string) => {
+    setActiveProjectId(projectId);
     setIsProjectDialogOpen(true);
   };
+
 
   const handleProjectClick = (id: string) => {
     setOpenProject(openProject === id ? null : id);
@@ -42,7 +43,7 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
     return testCases.filter((tc) => {
       const matchesSearch =
         tc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        tc.id.toLowerCase().includes(searchQuery.toLowerCase());
+        tc.TestCaseId .toLowerCase().includes(searchQuery.toLowerCase());
       const matchesFilter =
         filterStatus === "all" || tc.status === filterStatus;
       return matchesSearch && matchesFilter;
@@ -60,7 +61,7 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
 
   const activeProjectName = useMemo(() => {
     if (!openProject) return "All Projects";
-    const project = projects.find((p) => p.id === openProject);
+    const project = projects.find((p) => p.projectId === openProject);
     return project?.projectName || "Unknown Project";
   }, [openProject, projects]);
 
@@ -78,7 +79,7 @@ export const WorkSpace = ({ testCases, users, projects }: WorkSpaceProps) => {
         />
         {isProjectDialogOpen && (
           <NewProjectDialog
-            parentId={currentParentId}
+            projectId={activeProjectId}
             onClose={() => setIsProjectDialogOpen(false)}
             onSave={(data) => {
               // כאן את מוסיפים את הפרויקט/תיקייה לבסיס נתונים (שולחים לבאק)

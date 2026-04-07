@@ -22,8 +22,7 @@ import {
 } from "lucide-react";
 import ControlCenter from "./ControlCenter";
 import { DRAWER_WIDTH } from "../../theme/theme";
-import {TestFile, Project} from "../../types/index";
-
+import { TestFile, Project } from "../../types/index";
 
 interface SidebarProps {
   projects: Project[];
@@ -31,10 +30,15 @@ interface SidebarProps {
   handleProjectClick: (id: string) => void;
   onAddNewProject: () => void;
   onAddNewFolder: (projectId: string) => void;
-
 }
 
-const Sidebar = ({ projects, openProject, handleProjectClick, onAddNewProject, onAddNewFolder}: SidebarProps) => {
+const Sidebar = ({
+  projects,
+  openProject,
+  handleProjectClick,
+  onAddNewProject,
+  onAddNewFolder,
+}: SidebarProps) => {
   return (
     <Drawer
       variant="permanent"
@@ -59,7 +63,6 @@ const Sidebar = ({ projects, openProject, handleProjectClick, onAddNewProject, o
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              
             }}
           >
             <LayoutGrid color="white" size={22} />
@@ -121,9 +124,10 @@ const Sidebar = ({ projects, openProject, handleProjectClick, onAddNewProject, o
       <Box sx={{ flexGrow: 1, overflowY: "auto", px: 2, mb: 1 }}>
         <List disablePadding>
           {projects.map((project) => (
-            <Box key={project.id} sx={{ mb: 0.5 }}>
+            <Box key={project.projectId} sx={{ mb: 0.5 }}>
               <ListItemButton
-                onClick={() => handleProjectClick(project.id)}
+                key={project.projectId}
+                onClick={() => handleProjectClick(project.projectId)}
                 sx={{
                   borderRadius: 2,
                   p: 0.5,
@@ -134,7 +138,7 @@ const Sidebar = ({ projects, openProject, handleProjectClick, onAddNewProject, o
                 }}
               >
                 <ListItemIcon sx={{ minWidth: 35 }}>
-                  {openProject === project.id ? (
+                  {openProject === project.projectId ? (
                     <ChevronDown size={18} />
                   ) : (
                     <ChevronRight size={18} />
@@ -151,7 +155,7 @@ const Sidebar = ({ projects, openProject, handleProjectClick, onAddNewProject, o
                   size="small"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onAddNewFolder(project.id)
+                    onAddNewFolder(project.projectId);
                     console.log("Create folder in:", project.projectName);
                   }}
                   sx={{
@@ -167,14 +171,14 @@ const Sidebar = ({ projects, openProject, handleProjectClick, onAddNewProject, o
               </ListItemButton>
 
               <Collapse
-                in={openProject === project.id}
+                in={openProject === project.projectId}
                 timeout="auto"
                 unmountOnExit
               >
                 <List component="div" disablePadding sx={{ pl: 5 }}>
                   {project.files?.map((file) => (
                     <ListItemButton
-                      key={file.id}
+                      key={file.TestFileId}
                       sx={{ borderRadius: 2, py: 0.5 }}
                     >
                       <ListItemIcon sx={{ minWidth: 30 }}>

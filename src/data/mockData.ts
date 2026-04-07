@@ -45,7 +45,7 @@ export const mockUsers: User[] = [
 
 export const mockTestCases: TestCase[] = [
   {
-    id: 'TC-001',
+    TestCaseId: 'TC-001',
     title: 'User Login - Valid Credentials',
     testSteps: '1. Navigate to login page\n2. Enter valid email\n3. Enter valid password\n4. Click login button',
     expectedResult: 'User should be redirected to dashboard with welcome message',
@@ -53,7 +53,7 @@ export const mockTestCases: TestCase[] = [
     status: 'pass'
   },
   {
-    id: 'TC-002',
+    TestCaseId: 'TC-002',
     title: 'User Login - Invalid Password',
     testSteps: '1. Navigate to login page\n2. Enter valid email\n3. Enter invalid password\n4. Click login button',
     expectedResult: 'Error message "Invalid credentials" should appear',
@@ -61,7 +61,7 @@ export const mockTestCases: TestCase[] = [
     status: 'pass'
   },
   {
-    id: 'TC-003',
+    TestCaseId: 'TC-003',
     title: 'Create New Test Case',
     testSteps: '1. Click "New Test" button\n2. Fill in test details\n3. Assign to team member\n4. Save test case',
     expectedResult: 'Test case should be created and appear in the grid',
@@ -69,7 +69,7 @@ export const mockTestCases: TestCase[] = [
     status: 'in-progress'
   },
   {
-    id: 'TC-004',
+    TestCaseId: 'TC-004',
     title: 'Import Excel Test Cases',
     testSteps: '1. Click Import Excel button\n2. Select valid .xlsx file\n3. Map columns\n4. Confirm import',
     expectedResult: 'All test cases from Excel should be imported successfully',
@@ -77,7 +77,7 @@ export const mockTestCases: TestCase[] = [
     status: 'fail'
   },
   {
-    id: 'TC-005',
+    TestCaseId: 'TC-005',
     title: 'Export Test Cases to Excel',
     testSteps: '1. Select test cases\n2. Click Export Excel button\n3. Choose location\n4. Save file',
     expectedResult: 'Excel file should download with all selected test cases',
@@ -85,7 +85,7 @@ export const mockTestCases: TestCase[] = [
     status: 'pass'
   },
   {
-    id: 'TC-006',
+    TestCaseId: 'TC-006',
     title: 'Assign Test Case to Multiple Users',
     testSteps: '1. Select test case\n2. Open assignee dropdown\n3. Select multiple users\n4. Save changes',
     expectedResult: 'Test case should show all assigned users',
@@ -93,7 +93,7 @@ export const mockTestCases: TestCase[] = [
     status: 'in-progress'
   },
   {
-    id: 'TC-007',
+    TestCaseId: 'TC-007',
     title: 'Filter Test Cases by Status',
     testSteps: '1. Click status filter\n2. Select "In Progress"\n3. View filtered results',
     expectedResult: 'Only in-progress test cases should be visible',
@@ -101,7 +101,7 @@ export const mockTestCases: TestCase[] = [
     status: 'pass'
   },
   {
-    id: 'TC-008',
+    TestCaseId: 'TC-008',
     title: 'Real-time Collaboration Test',
     testSteps: '1. Open test case\n2. Edit test steps\n3. Verify other users see changes\n4. Check for conflicts',
     expectedResult: 'Changes should appear instantly for all users',
@@ -109,7 +109,7 @@ export const mockTestCases: TestCase[] = [
     status: 'in-progress'
   },
   {
-    id: 'TC-009',
+    TestCaseId: 'TC-009',
     title: 'User Permission - Viewer Role',
     testSteps: '1. Login as viewer\n2. Attempt to edit test case\n3. Attempt to delete test case',
     expectedResult: 'Viewer should only be able to view, not edit',
@@ -117,7 +117,7 @@ export const mockTestCases: TestCase[] = [
     status: 'pending'
   },
   {
-    id: 'TC-010',
+    TestCaseId: 'TC-010',
     title: 'Dashboard Load Performance',
     testSteps: '1. Navigate to dashboard\n2. Measure load time\n3. Check for 1000+ test cases\n4. Verify smooth scrolling',
     expectedResult: 'Dashboard should load in under 2 seconds',
