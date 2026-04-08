@@ -19,6 +19,7 @@ import {
   ChevronDown,
   LayoutDashboard,
   Plus,
+  Trash,
 } from "lucide-react";
 import ControlCenter from "./ControlCenter";
 import { DRAWER_WIDTH } from "../../theme/theme";
@@ -30,6 +31,8 @@ interface SidebarProps {
   handleProjectClick: (id: string) => void;
   onAddNewProject: () => void;
   onAddNewFolder: (projectId: string) => void;
+  handleDeleteFile: (testFileId: string) => void;
+  handleDeleteProject: (projectId: string) => void;
 }
 
 const Sidebar = ({
@@ -38,6 +41,8 @@ const Sidebar = ({
   handleProjectClick,
   onAddNewProject,
   onAddNewFolder,
+  handleDeleteProject,
+  handleDeleteFile,
 }: SidebarProps) => {
   return (
     <Drawer
@@ -149,25 +154,43 @@ const Sidebar = ({
                 </ListItemIcon>
 
                 <ListItemText primary={project.projectName} />
-
-                <IconButton
-                  className="add-folder-btn"
-                  size="small"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onAddNewFolder(project.projectId);
-                    console.log("Create folder in:", project.projectName);
-                  }}
-                  sx={{
-                    opacity: 0,
-                    visibility: "hidden",
-                    transition: "all 0.2s ease-in-out",
-                    "&:hover": { bgcolor: "primary.light", color: "white" },
-                    p: 0.5,
-                  }}
-                >
-                  <Plus size={14} />
-                </IconButton>
+                <Box>
+                  <IconButton
+                    className="add-folder-btn"
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteProject(project.projectId)
+                    }}
+                    sx={{
+                      opacity: 0,
+                      visibility: "hidden",
+                      transition: "all 0.2s ease-in-out",
+                      "&:hover": { bgcolor: "red", color: "white" },
+                      p: 0.5,
+                    }}
+                  >
+                    <Trash size={14} />
+                  </IconButton>
+                  <IconButton
+                    className="add-folder-btn"
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onAddNewFolder(project.projectId);
+                      console.log("Create folder in:", project.projectName);
+                    }}
+                    sx={{
+                      opacity: 0,
+                      visibility: "hidden",
+                      transition: "all 0.2s ease-in-out",
+                      "&:hover": { bgcolor: "primary.light", color: "white" },
+                      p: 0.5,
+                    }}
+                  >
+                    <Plus size={14} />
+                  </IconButton>
+                </Box>
               </ListItemButton>
 
               <Collapse
@@ -179,7 +202,14 @@ const Sidebar = ({
                   {project.files?.map((file) => (
                     <ListItemButton
                       key={file.TestFileId}
-                      sx={{ borderRadius: 2, py: 0.5 }}
+                      sx={{
+                        borderRadius: 2,
+                        py: 0.5,
+                        "&:hover .add-folder-btn": {
+                          opacity: 1,
+                          visibility: "visible",
+                        },
+                      }}
                     >
                       <ListItemIcon sx={{ minWidth: 30 }}>
                         <FileText size={16} />
@@ -193,6 +223,23 @@ const Sidebar = ({
                           },
                         }}
                       />
+                      <IconButton
+                        className="add-folder-btn"
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteFile(file.TestFileId);
+                        }}
+                        sx={{
+                          opacity: 0,
+                          visibility: "hidden",
+                          transition: "all 0.2s ease-in-out",
+                          "&:hover": { bgcolor: "red", color: "white" },
+                          p: 0.5,
+                        }}
+                      >
+                        <Trash size={14} />
+                      </IconButton>
                     </ListItemButton>
                   ))}
                 </List>

@@ -73,6 +73,47 @@ export const WorkSpace = ({
     }
   };
 
+  const handleDeleteProject = async (projectId: string ) => {
+    const url = `http://localhost:5000/projects/${projectId}`;
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.ok) {
+        setIsProjectDialogOpen(false);
+        await onRefreshProjects();
+        setActiveProjectId(undefined)
+      } else {
+        // i can add here a notification when the deleting is fail
+        console.error("Server returned an error:", response.statusText);
+      }
+    } catch (err) {
+      console.error("Error deleting project", err);
+    }
+  }
+
+  const handleDeleteFile = async (testFileId: string ) => {
+    const url = `http://localhost:5000/files/${testFileId}`;
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.ok) {
+        // i will have here a state to close the delete dialog are u sure thing
+        await onRefreshProjects();
+      } else {
+        // i can add here a notification when the deleting is fail
+        console.error("Server returned an error:", response.statusText);
+      }
+    } catch (err) {
+      console.error("Error deleting file", err);
+    }
+  }
+
   const handleProjectClick = (id: string) => {
     setOpenProject(openProject === id ? null : id);
   };
@@ -112,6 +153,8 @@ export const WorkSpace = ({
           projects={projects}
           openProject={openProject}
           handleProjectClick={handleProjectClick}
+          handleDeleteFile ={handleDeleteFile}
+          handleDeleteProject ={handleDeleteProject}
           onAddNewProject={() => handleOpenProjectDialog()}
           onAddNewFolder={(id) => handleOpenProjectDialog(id)}
         />
