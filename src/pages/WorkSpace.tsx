@@ -9,6 +9,12 @@ import { TestCase, User, Project } from "../types";
 import TestGrid from "../components/Workspace/TestGrid";
 import NewTestDialog from "../components/Workspace/NewTestDialog";
 import NewProjectAndFolderDialog from "../components/Workspace/NewProjectAndFolderDialog";
+import {
+  createProjectAndFolder,
+  deleteFile,
+  deleteProject,
+} from "../services/api";
+import { useSideBarManager } from "../hooks/useSideBarManager";
 
 interface WorkSpaceProps {
   testCases: TestCase[];
@@ -19,99 +25,17 @@ interface WorkSpaceProps {
 
 export const WorkSpace = ({
   testCases,
-  users,
   projects,
   onRefreshProjects,
 }: WorkSpaceProps) => {
+  const projectManager = useSideBarManager(onRefreshProjects);
+
   const [NewTestCases, setNewTestCases] = useState(testCases); // סטייט שנועד כדי לסנכרן את הטבלה כשמוסיפים טסט חדש בדילאוגג
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [showNewTestDialog, setShowNewTestDialog] = useState(false);
 
   const [openProject, setOpenProject] = useState<string | null>(null);
-
-  const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
-  const [activeProjectId, setActiveProjectId] = useState<string | undefined>(
-    undefined,
-  );
-
-  const handleOpenProjectDialog = (projectId?: string) => {
-    setActiveProjectId(projectId);
-    setIsProjectDialogOpen(true);
-  };
-
-  const handleCreateProjectAndFolder = async (
-    name: string,
-    description: string,
-    projectId?: string,
-  ) => {
-    const url = projectId
-      ? 'http://localhost:5000/files'
-      : 'http://localhost:5000/projects';
-
-    const bodyData = projectId
-      ? { name, description, projectId }
-      : { projectName: name, description };
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyData),
-      });
-
-      if (response.ok) {
-        setIsProjectDialogOpen(false);
-        await onRefreshProjects();
-      } else {
-        // i can add here a notification when the saving is fail
-        console.error("Server returned an error:", response.statusText);
-      }
-    } catch (err) {
-      console.error("Error creating folder/project", err);
-    }
-  };
-
-  const handleDeleteProject = async (projectId: string ) => {
-    const url = `http://localhost:5000/projects/${projectId}`;
-    try {
-      const response = await fetch(url, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (response.ok) {
-        setIsProjectDialogOpen(false);
-        await onRefreshProjects();
-        setActiveProjectId(undefined)
-      } else {
-        // i can add here a notification when the deleting is fail
-        console.error("Server returned an error:", response.statusText);
-      }
-    } catch (err) {
-      console.error("Error deleting project", err);
-    }
-  }
-
-  const handleDeleteFile = async (testFileId: string ) => {
-    const url = `http://localhost:5000/files/${testFileId}`;
-    try {
-      const response = await fetch(url, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (response.ok) {
-        // i will have here a state to close the delete dialog are u sure thing
-        await onRefreshProjects();
-      } else {
-        // i can add here a notification when the deleting is fail
-        console.error("Server returned an error:", response.statusText);
-      }
-    } catch (err) {
-      console.error("Error deleting file", err);
-    }
-  }
 
   const handleProjectClick = (id: string) => {
     setOpenProject(openProject === id ? null : id);
@@ -152,16 +76,16 @@ export const WorkSpace = ({
           projects={projects}
           openProject={openProject}
           handleProjectClick={handleProjectClick}
-          handleDeleteFile ={handleDeleteFile}
-          handleDeleteProject ={handleDeleteProject}
-          onAddNewProject={() => handleOpenProjectDialog()}
-          onAddNewFolder={(id) => handleOpenProjectDialog(id)}
+          handleDeleteFolder={projectManager.handleDeleteFolder}
+          handleDeleteProject={projectManager.handleDeleteProject}
+          onAddNewProject={() => projectManager.handleOpenProjectDialog()}
+          onAddNewFolder={(id) => projectManager.handleOpenProjectDialog(id)}
         />
-        {isProjectDialogOpen && (
+        {projectManager.isProjectDialogOpen && (
           <NewProjectAndFolderDialog
-            projectId={activeProjectId}
-            onClose={() => setIsProjectDialogOpen(false)}
-            onSave={handleCreateProjectAndFolder}
+            projectId={projectManager.activeProjectId}
+            onClose={projectManager.handleCloseProjectDialog}
+            onSave={projectManager.handleCreateProjectAndFolder}
           />
         )}
       </Box>

@@ -31,7 +31,7 @@ interface SidebarProps {
   handleProjectClick: (id: string) => void;
   onAddNewProject: () => void;
   onAddNewFolder: (projectId: string) => void;
-  handleDeleteFile: (testFileId: string) => void;
+  handleDeleteFolder: (testFileId: string) => void;
   handleDeleteProject: (projectId: string) => void;
 }
 
@@ -42,7 +42,7 @@ const Sidebar = ({
   onAddNewProject,
   onAddNewFolder,
   handleDeleteProject,
-  handleDeleteFile,
+  handleDeleteFolder,
 }: SidebarProps) => {
   return (
     <Drawer
@@ -228,7 +228,7 @@ const Sidebar = ({
                         size="small"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDeleteFile(file.TestFileId);
+                          handleDeleteFolder(file.TestFileId);
                         }}
                         sx={{
                           opacity: 0,
