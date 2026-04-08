@@ -37,7 +37,7 @@ export const useSideBarManager = (onRefresh: () => Promise<void>) => {
   };
 
   const handleDeleteProject = async (projectId: string) => {
-    if (!window.confirm("בטוח שברצונך למחוק את הפרויקט?")) return;
+    if (!window.confirm("בטוחהה שאת רוצה למחוק את הפרויקט או שאת מטומטמת?")) return;
     try {
       await deleteProject(projectId);
       await onRefresh();
@@ -47,7 +47,7 @@ export const useSideBarManager = (onRefresh: () => Promise<void>) => {
   };
 
   const handleDeleteFolder = async (testFileId: string) => {
-    if (!window.confirm("בטוח שברצונך למחוק את הפרויקט?")) return;
+    if (!window.confirm("את באמת מנסה למחוק את הקובץ או שאת טיפשה?")) return;
     try {
       await deleteFile(testFileId);
       await onRefresh();

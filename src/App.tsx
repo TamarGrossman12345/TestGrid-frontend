@@ -1,6 +1,5 @@
 import { Button, Container, Typography } from "@mui/material";
 import { WorkSpace } from "./pages/WorkSpace";
-import { mockTestCases, mockUsers } from "./data/mockData";
 import { theme } from "./theme/theme";
 import { ThemeProvider } from "@mui/material/styles";
 import { useEffect, useState } from "react";
@@ -25,8 +24,6 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <WorkSpace
-        testCases={mockTestCases}
-        users={mockUsers}
         projects={projects}
         onRefreshProjects={fetchProjects}
       />

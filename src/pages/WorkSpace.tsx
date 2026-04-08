@@ -13,8 +13,6 @@ import { useSideBarManager } from "../hooks/useSideBarManager";
 import { getTestCasesFromFile } from "../services/api";
 
 interface WorkSpaceProps {
-  testCases: TestCase[];
-  users: User[];
   projects: Project[];
   onRefreshProjects: () => Promise<void>;
 }
