@@ -65,4 +65,6 @@ export const useSideBarManager = (onRefresh: () => Promise<void>) => {
     handleDeleteProject,
     handleDeleteFolder,
   };
-};
+}
+
+

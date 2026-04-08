@@ -17,13 +17,15 @@ import { TestCase } from '../../types';
 interface NewTestDialogProps {
   onClose: () => void;
   onSave?: (testData: TestCase) => void;
+  fileId: string | undefined;
 }
 // צריך להוסיף פונקציה לשמירה כשנוסיף את הבאקקק
-const NewTestDialog = ({ onClose, onSave }: NewTestDialogProps) => {
+const NewTestDialog = ({ onClose, onSave, fileId }: NewTestDialogProps) => {
   const [formData, setFormData] = useState({
     title: '',
     testSteps: '',
     expectedResult: '',
+    
   });
   
   // בהמשך אצטרך לשנות ככה שהמזהה יהיה מתוך הרשימה הקיימת שלא ייצא מצב שיש לנו טסט עם אותו מזהה יותר מפעם אחת
@@ -37,7 +39,7 @@ const NewTestDialog = ({ onClose, onSave }: NewTestDialogProps) => {
       TestCaseId: previewId,
       title: formData.title,
       testSteps: formData.testSteps,
-      expectedResult: formData.expectedResult,
+      expectedResults: formData.expectedResult,
       status: 'pending', 
       assignee: { name: 'Unassigned', avatar: '?', color: '#9e9e9e' } as any 
     };

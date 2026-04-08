@@ -156,7 +156,7 @@ export const WorkSpace = ({
         <StatsFooter {...stats} />
       </Box>
       {showNewTestDialog && (
-        <NewTestDialog onClose={() => setShowNewTestDialog(false)} />
+        <NewTestDialog onClose={() => setShowNewTestDialog(false)} fileId={activeFolderId} />
       )}
     </Box>
   );

@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 const baseURL = "http://localhost:5000";
 
 export const getAllProjects = () => {
@@ -33,15 +32,22 @@ export const deleteProject = (projectId: string) => {
   });
 };
 
+export const deleteFile = (testFileId: string) => {
+  return axios({
+    method: "DELETE",
+    url: `${baseURL}/files/${testFileId}`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
 export const createProjectAndFolder = (
   name: string,
   description: string,
   projectId?: string,
 ) => {
- 
-  const url = projectId 
-    ? `${baseURL}/files` 
-    : `${baseURL}/projects`;
+  const url = projectId ? `${baseURL}/files` : `${baseURL}/projects`;
 
   const bodyData = projectId
     ? { name, description, projectId }
@@ -57,13 +63,20 @@ export const createProjectAndFolder = (
   });
 };
 
-export const deleteFile = (testFileId: string) => {
+export const createTestCase = (
+  fileId: string,
+  title: string,
+  testSteps: string,
+  expectedResults: string,
+) => {
+  const bodyData = { title, testSteps, expectedResults };
+
   return axios({
-    method: "DELETE",
-    url: `${baseURL}/files/${testFileId}`,
+    method: "POST",
+    url: `${baseURL}/testCases/newTestCase/${fileId}`,
+    data: bodyData,
     headers: {
       "Content-Type": "application/json",
     },
   });
 };
-
