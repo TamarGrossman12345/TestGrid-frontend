@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+
 import {
   Box,
   Drawer,
@@ -6,24 +6,15 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Collapse,
   Typography,
   Divider,
   IconButton,
 } from "@mui/material";
-import {
-  Folder,
-  FileText,
-  ChevronRight,
-  LayoutGrid,
-  ChevronDown,
-  LayoutDashboard,
-  Plus,
-  Trash,
-} from "lucide-react";
+import { LayoutGrid, LayoutDashboard, Plus } from "lucide-react";
 import ControlCenter from "./ControlCenter";
 import { DRAWER_WIDTH } from "../../theme/theme";
-import { TestFile, Project } from "../../types/index";
+import { Project } from "../../types/index";
+import ProjectAndFolderItem from "./ProjectAndFolderItem";
 
 interface SidebarProps {
   projects: Project[];
@@ -129,122 +120,15 @@ const Sidebar = ({
       <Box sx={{ flexGrow: 1, overflowY: "auto", px: 2, mb: 1 }}>
         <List disablePadding>
           {projects.map((project) => (
-            <Box key={project.projectId} sx={{ mb: 0.5 }}>
-              <ListItemButton
-                key={project.projectId}
-                onClick={() => handleProjectClick(project.projectId)}
-                sx={{
-                  borderRadius: 2,
-                  p: 0.5,
-                  "&:hover .add-folder-btn": {
-                    opacity: 1,
-                    visibility: "visible",
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ minWidth: 35 }}>
-                  {openProject === project.projectId ? (
-                    <ChevronDown size={18} />
-                  ) : (
-                    <ChevronRight size={18} />
-                  )}
-                </ListItemIcon>
-                <ListItemIcon sx={{ minWidth: 35 }}>
-                  <FileText size={20} />
-                </ListItemIcon>
-
-                <ListItemText primary={project.projectName} />
-                <Box>
-                  <IconButton
-                    className="add-folder-btn"
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteProject(project.projectId)
-                    }}
-                    sx={{
-                      opacity: 0,
-                      visibility: "hidden",
-                      transition: "all 0.2s ease-in-out",
-                      "&:hover": { bgcolor: "red", color: "white" },
-                      p: 0.5,
-                    }}
-                  >
-                    <Trash size={14} />
-                  </IconButton>
-                  <IconButton
-                    className="add-folder-btn"
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onAddNewFolder(project.projectId);
-                      console.log("Create folder in:", project.projectName);
-                    }}
-                    sx={{
-                      opacity: 0,
-                      visibility: "hidden",
-                      transition: "all 0.2s ease-in-out",
-                      "&:hover": { bgcolor: "primary.light", color: "white" },
-                      p: 0.5,
-                    }}
-                  >
-                    <Plus size={14} />
-                  </IconButton>
-                </Box>
-              </ListItemButton>
-
-              <Collapse
-                in={openProject === project.projectId}
-                timeout="auto"
-                unmountOnExit
-              >
-                <List component="div" disablePadding sx={{ pl: 5 }}>
-                  {project.files?.map((file) => (
-                    <ListItemButton
-                      key={file.TestFileId}
-                      sx={{
-                        borderRadius: 2,
-                        py: 0.5,
-                        "&:hover .add-folder-btn": {
-                          opacity: 1,
-                          visibility: "visible",
-                        },
-                      }}
-                    >
-                      <ListItemIcon sx={{ minWidth: 30 }}>
-                        <Folder  size={16} />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={file.name}
-                        slotProps={{
-                          primary: {
-                            fontSize: "0.9rem",
-                            color: "text.secondary",
-                          },
-                        }}
-                      />
-                      <IconButton
-                        className="add-folder-btn"
-                        size="small"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteFolder(file.TestFileId);
-                        }}
-                        sx={{
-                          opacity: 0,
-                          visibility: "hidden",
-                          transition: "all 0.2s ease-in-out",
-                          "&:hover": { bgcolor: "red", color: "white" },
-                          p: 0.5,
-                        }}
-                      >
-                        <Trash size={14} />
-                      </IconButton>
-                    </ListItemButton>
-                  ))}
-                </List>
-              </Collapse>
-            </Box>
+            <ProjectAndFolderItem
+              key={project.projectId}
+              project={project}
+              isOpen={openProject === project.projectId}
+              onClick={() => handleProjectClick(project.projectId)}
+              onAddFolder={onAddNewFolder}
+              onDeleteProject={handleDeleteProject}
+              onDeleteFolder={handleDeleteFolder}
+            />
           ))}
         </List>
       </Box>
