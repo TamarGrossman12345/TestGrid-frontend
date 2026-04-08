@@ -17,7 +17,6 @@ interface WorkSpaceProps {
   onRefreshProjects: () => Promise<void>;
 }
 
-
 export const WorkSpace = ({
   testCases,
   users,

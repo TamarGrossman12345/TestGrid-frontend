@@ -54,7 +54,7 @@ interface NewProjectAndFolderDialogProps {
                 color: 'white',
                 display: 'flex' 
               }}>
-                {isFolder ? <FileText size={20} /> : <Folder size={20} />}
+                {isFolder ? <Folder size={20} /> : <FileText size={20} />}
               </Box>
               <Typography variant="h6" fontWeight="700">
                 {isFolder ? 'Add New Folder' : 'New Project'}

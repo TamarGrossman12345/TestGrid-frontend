@@ -150,7 +150,7 @@ const Sidebar = ({
                   )}
                 </ListItemIcon>
                 <ListItemIcon sx={{ minWidth: 35 }}>
-                  <Folder size={20} />
+                  <FileText size={20} />
                 </ListItemIcon>
 
                 <ListItemText primary={project.projectName} />
@@ -212,7 +212,7 @@ const Sidebar = ({
                       }}
                     >
                       <ListItemIcon sx={{ minWidth: 30 }}>
-                        <FileText size={16} />
+                        <Folder  size={16} />
                       </ListItemIcon>
                       <ListItemText
                         primary={file.name}
