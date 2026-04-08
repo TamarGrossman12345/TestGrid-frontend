@@ -20,13 +20,12 @@ interface WorkSpaceProps {
 }
 
 export const WorkSpace = ({
-  testCases,
   projects,
   onRefreshProjects,
 }: WorkSpaceProps) => {
   const projectManager = useSideBarManager(onRefreshProjects);
 
-  const [activeTestCases, setActiveTestCases] = useState(testCases); // סטייט שנועד כדי לסנכרן את הטבלה כשמוסיפים טסט חדש בדילאוגג
+  const [activeTestCases, setActiveTestCases] =useState<TestCase[]>([]); 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [showNewTestDialog, setShowNewTestDialog] = useState(false);

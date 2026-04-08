@@ -11,6 +11,7 @@ export interface User {
 
 export interface TestCase {
   TestCaseId : string;
+  serialId: number;
   title: string;
   testSteps: string;
   expectedResults: string;

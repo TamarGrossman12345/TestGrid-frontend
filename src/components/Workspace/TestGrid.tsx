@@ -121,7 +121,7 @@ const TestGrid = ({ testCases }: TestGridProps) => {
               sx={{ "&:hover": { bgcolor: "action.hover" } }}
             >
               <TableCell sx={columnDivider}>
-                <Typography variant="body2">{testCase.TestCaseId}</Typography>
+                <Typography variant="body2">{`TG - ${testCase.serialId}`}</Typography>
               </TableCell>
 
               <TableCell sx={columnDivider}>
