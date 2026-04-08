@@ -7,12 +7,9 @@ import {
   TableHead,
   TableRow,
   Paper,
-
   Typography,
-  
 } from "@mui/material";
 import { TestCase } from "../../types";
-
 
 interface TestGridProps {
   testCases: TestCase[];
@@ -42,50 +39,110 @@ const getStatusLabel = (status: string) => {
 };
 
 const TestGrid = ({ testCases }: TestGridProps) => {
-  
   const columnDivider = {
-    borderRight: '1px solid',
-    borderColor: 'grey.200', 
-    '&:last-child': {
-      borderRight: 'none', 
+    borderRight: "1px solid",
+    borderColor: "grey.200",
+    "&:last-child": {
+      borderRight: "none",
       wordBreak: "break-word",
     },
   };
 
   return (
-    <TableContainer component={Paper} sx={{ boxShadow: "none", bgcolor: "transparent" }}>
-      <Table stickyHeader sx={{ 
+    <TableContainer
+      component={Paper}
+      sx={{ boxShadow: "none", bgcolor: "transparent" }}
+    >
+      <Table
+        stickyHeader
+        sx={{
           tableLayout: "fixed", // הקסם קורה כאן - מקבע את רוחב העמודות
-          width: "100%" 
-        }}>
+          width: "100%",
+        }}
+      >
         <TableHead>
           <TableRow>
-            <TableCell sx={{ ...columnDivider, bgcolor: "grey.50", fontWeight: 600, width: 80 }}>ID</TableCell>
-            <TableCell sx={{ ...columnDivider, bgcolor: "grey.50", fontWeight: 600, minWidth: 200 }}>Title</TableCell>
-            <TableCell sx={{ ...columnDivider, bgcolor: "grey.50", fontWeight: 600, minWidth: 250 }}>Test Steps</TableCell>
-            <TableCell sx={{ ...columnDivider, bgcolor: "grey.50", fontWeight: 600, minWidth: 250 }}>Expected Result</TableCell>
-            <TableCell sx={{ ...columnDivider, bgcolor: "grey.50", fontWeight: 600, width: 120 }}>Status</TableCell>
+            <TableCell
+              sx={{
+                ...columnDivider,
+                bgcolor: "grey.50",
+                fontWeight: 600,
+                width: 80,
+              }}
+            >
+              ID
+            </TableCell>
+            <TableCell
+              sx={{
+                ...columnDivider,
+                bgcolor: "grey.50",
+                fontWeight: 600,
+                minWidth: 200,
+              }}
+            >
+              Title
+            </TableCell>
+            <TableCell
+              sx={{
+                ...columnDivider,
+                bgcolor: "grey.50",
+                fontWeight: 600,
+                minWidth: 250,
+              }}
+            >
+              Test Steps
+            </TableCell>
+            <TableCell
+              sx={{
+                ...columnDivider,
+                bgcolor: "grey.50",
+                fontWeight: 600,
+                minWidth: 250,
+              }}
+            >
+              Expected Result
+            </TableCell>
+            <TableCell
+              sx={{
+                ...columnDivider,
+                bgcolor: "grey.50",
+                fontWeight: 600,
+                width: 120,
+              }}
+            >
+              Status
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {testCases.map((testCase) => (
-            <TableRow key={testCase.TestCaseId } sx={{ "&:hover": { bgcolor: "action.hover" } }}>
+            <TableRow
+              key={testCase.TestCaseId}
+              sx={{ "&:hover": { bgcolor: "action.hover" } }}
+            >
               <TableCell sx={columnDivider}>
-                <Typography variant="body2">{testCase.TestCaseId }</Typography>
+                <Typography variant="body2">{testCase.TestCaseId}</Typography>
               </TableCell>
 
               <TableCell sx={columnDivider}>
-                <Typography variant="body2" fontWeight="medium">{testCase.title}</Typography>
+                <Typography variant="body2" fontWeight="medium">
+                  {testCase.title}
+                </Typography>
               </TableCell>
 
               <TableCell sx={columnDivider}>
-                <Typography variant="body2" sx={{ whiteSpace: "pre-line", color: "text.secondary" }}>
+                <Typography
+                  variant="body2"
+                  sx={{ whiteSpace: "pre-line", color: "text.secondary" }}
+                >
                   {testCase.testSteps}
                 </Typography>
               </TableCell>
 
               <TableCell sx={columnDivider}>
-                <Typography variant="body2" color="text.secondary">{testCase.expectedResult}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {testCase.expectedResults}
+                </Typography>
               </TableCell>
 
               <TableCell sx={columnDivider}>
@@ -103,6 +160,6 @@ const TestGrid = ({ testCases }: TestGridProps) => {
       </Table>
     </TableContainer>
   );
-}
+};
 
 export default TestGrid;

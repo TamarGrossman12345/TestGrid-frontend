@@ -9,12 +9,8 @@ import { TestCase, User, Project } from "../types";
 import TestGrid from "../components/Workspace/TestGrid";
 import NewTestDialog from "../components/Workspace/NewTestDialog";
 import NewProjectAndFolderDialog from "../components/Workspace/NewProjectAndFolderDialog";
-import {
-  createProjectAndFolder,
-  deleteFile,
-  deleteProject,
-} from "../services/api";
 import { useSideBarManager } from "../hooks/useSideBarManager";
+import { getTestCasesFromFile } from "../services/api";
 
 interface WorkSpaceProps {
   testCases: TestCase[];
@@ -30,19 +26,31 @@ export const WorkSpace = ({
 }: WorkSpaceProps) => {
   const projectManager = useSideBarManager(onRefreshProjects);
 
-  const [NewTestCases, setNewTestCases] = useState(testCases); // סטייט שנועד כדי לסנכרן את הטבלה כשמוסיפים טסט חדש בדילאוגג
+  const [activeTestCases, setActiveTestCases] = useState(testCases); // סטייט שנועד כדי לסנכרן את הטבלה כשמוסיפים טסט חדש בדילאוגג
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [showNewTestDialog, setShowNewTestDialog] = useState(false);
 
   const [openProject, setOpenProject] = useState<string | null>(null);
 
+  const [activeFolderId, setActiveFolderId] = useState<string | undefined>();
+
+  const handleFolderClick = async (fileId: string) => {
+    try {
+      const response = await getTestCasesFromFile(fileId);
+      setActiveTestCases(response.data);
+      setActiveFolderId(fileId);
+    } catch (error) {
+      console.error("Error fetching test cases:", error);
+    }
+  };
+
   const handleProjectClick = (id: string) => {
     setOpenProject(openProject === id ? null : id);
   };
 
   const filteredTestCases = useMemo(() => {
-    return testCases.filter((tc) => {
+    return activeTestCases.filter((tc) => {
       const matchesSearch =
         tc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         tc.TestCaseId.toLowerCase().includes(searchQuery.toLowerCase());
@@ -50,16 +58,16 @@ export const WorkSpace = ({
         filterStatus === "all" || tc.status === filterStatus;
       return matchesSearch && matchesFilter;
     });
-  }, [testCases, searchQuery, filterStatus]);
+  }, [activeTestCases, searchQuery, filterStatus]);
 
   const stats = useMemo(() => {
     return {
-      total: testCases.length,
-      pass: testCases.filter((t) => t.status === "pass").length,
-      fail: testCases.filter((t) => t.status === "fail").length,
-      inProgress: testCases.filter((t) => t.status === "in-progress").length,
+      total: activeTestCases.length,
+      pass: activeTestCases.filter((t) => t.status === "pass").length,
+      fail: activeTestCases.filter((t) => t.status === "fail").length,
+      inProgress: activeTestCases.filter((t) => t.status === "in-progress").length,
     };
-  }, [testCases]);
+  }, [activeTestCases]);
 
   const activeProjectName = useMemo(() => {
     if (!openProject) return "All Projects";
@@ -80,6 +88,7 @@ export const WorkSpace = ({
           handleDeleteProject={projectManager.handleDeleteProject}
           onAddNewProject={() => projectManager.handleOpenProjectDialog()}
           onAddNewFolder={(id) => projectManager.handleOpenProjectDialog(id)}
+          handleFolderClick={handleFolderClick}
         />
         {projectManager.isProjectDialogOpen && (
           <NewProjectAndFolderDialog

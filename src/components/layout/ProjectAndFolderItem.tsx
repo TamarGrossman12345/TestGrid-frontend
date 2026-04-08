@@ -24,6 +24,7 @@ interface ProjectAndFolderItemProps {
   onAddFolder: (id: string) => void;
   onDeleteProject: (id: string) => void;
   onDeleteFolder: (id: string) => void;
+  handleFolderClick: (id: string) => void;
 }
 
 const ProjectAndFolderItem = ({
@@ -33,6 +34,7 @@ const ProjectAndFolderItem = ({
   onAddFolder,
   onDeleteProject,
   onDeleteFolder,
+  handleFolderClick,
 }: ProjectAndFolderItemProps) => {
   return (
     <Box sx={{ mb: 0.5 }}>
@@ -84,6 +86,7 @@ const ProjectAndFolderItem = ({
           {project.files?.map((file) => (
             <ListItemButton
               key={file.TestFileId}
+              onClick={() => handleFolderClick(file.TestFileId)}
               sx={{
                 borderRadius: 2,
                 py: 0.5,

@@ -34,7 +34,7 @@ const NewTestDialog = ({ onClose, onSave }: NewTestDialogProps) => {
     e.preventDefault();
     
     const newTest: TestCase = {
-      id: previewId,
+      TestCaseId: previewId,
       title: formData.title,
       testSteps: formData.testSteps,
       expectedResult: formData.expectedResult,

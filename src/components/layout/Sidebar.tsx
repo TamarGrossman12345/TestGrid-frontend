@@ -24,6 +24,8 @@ interface SidebarProps {
   onAddNewFolder: (projectId: string) => void;
   handleDeleteFolder: (testFileId: string) => void;
   handleDeleteProject: (projectId: string) => void;
+  handleFolderClick: (folderId: string) => void;
+  
 }
 
 const Sidebar = ({
@@ -34,6 +36,7 @@ const Sidebar = ({
   onAddNewFolder,
   handleDeleteProject,
   handleDeleteFolder,
+  handleFolderClick,
 }: SidebarProps) => {
   return (
     <Drawer
@@ -128,6 +131,7 @@ const Sidebar = ({
               onAddFolder={onAddNewFolder}
               onDeleteProject={handleDeleteProject}
               onDeleteFolder={handleDeleteFolder}
+              handleFolderClick={handleFolderClick}
             />
           ))}
         </List>

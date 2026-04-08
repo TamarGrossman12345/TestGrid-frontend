@@ -13,6 +13,16 @@ export const getAllProjects = () => {
   });
 };
 
+export const getTestCasesFromFile = (fileId: string) => {
+  return axios({
+    method: "GET",
+    url: `${baseURL}/testCase/${fileId}`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
 export const deleteProject = (projectId: string) => {
   return axios({
     method: "DELETE",

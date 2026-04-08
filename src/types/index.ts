@@ -13,7 +13,7 @@ export interface TestCase {
   TestCaseId : string;
   title: string;
   testSteps: string;
-  expectedResult: string;
+  expectedResults: string;
   assignee: User;
   status: TestStatus;
 }
