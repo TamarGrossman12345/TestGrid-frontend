@@ -43,21 +43,22 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
     setOpenProject(openProject === id ? null : id);
   };
 
-const handleTestCaseCreation = async (
-    testData: Partial<TestCase>
-  ) => {
+  const handleTestCaseCreation = async (testData: Partial<TestCase>) => {
     try {
       await createTestCase(
-      activeFolderId!, 
-      testData.title!, 
-      testData.testSteps!, 
-      testData.expectedResults!,
-      testData.status!,
-    );
+        activeFolderId!,
+        testData.title!,
+        testData.testSteps!,
+        testData.expectedResults!,
+        testData.status!,
+      );
       // אחרי יצירה מוצלחת, נשלוף מחדש את הטסטים כדי לעדכן את הטבלה
       if (activeFolderId) handleFolderClick(activeFolderId);
     } catch (err: any) {
-      console.error("Error creating test case:", err.response?.data || err.message);
+      console.error(
+        "Error creating test case:",
+        err.response?.data || err.message,
+      );
     }
   };
 
@@ -144,7 +145,15 @@ const handleTestCaseCreation = async (
           </Box>
 
           <Box sx={{ display: "flex", gap: 1.5 }}>
-            <Button variant="outlined" startIcon={<RefreshCw size={16} />}>
+            <Button
+              onClick={() => {
+                if (activeFolderId) {
+                  handleFolderClick(activeFolderId);
+                }
+              }}
+              variant="outlined"
+              startIcon={<RefreshCw size={16} />}
+            >
               Sync
             </Button>
 
