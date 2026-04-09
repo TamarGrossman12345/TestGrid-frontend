@@ -8,6 +8,7 @@ import {
   TableRow,
   Paper,
   Typography,
+  Box,
 } from "@mui/material";
 import { TestCase } from "../../types";
 
@@ -56,7 +57,7 @@ const TestGrid = ({ testCases }: TestGridProps) => {
       <Table
         stickyHeader
         sx={{
-          tableLayout: "fixed", // הקסם קורה כאן - מקבע את רוחב העמודות
+          tableLayout: "fixed", // ה מקבע את רוחב העמודות
           width: "100%",
         }}
       >
@@ -124,10 +125,20 @@ const TestGrid = ({ testCases }: TestGridProps) => {
                 <Typography variant="body2">{`TG - ${testCase.serialId}`}</Typography>
               </TableCell>
 
-              <TableCell sx={columnDivider}>
-                <Typography variant="body2" fontWeight="medium">
-                  {testCase.title}
-                </Typography>
+              <TableCell sx={columnDivider} align="center">
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center", // מרכוז אופקי
+                    alignItems: "center", // מרכוז אנכי
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  <Typography variant="body2" fontWeight="medium">
+                    {testCase.title}
+                  </Typography>
+                </Box>
               </TableCell>
 
               <TableCell sx={columnDivider}>
@@ -140,19 +151,39 @@ const TestGrid = ({ testCases }: TestGridProps) => {
               </TableCell>
 
               <TableCell sx={columnDivider}>
-                <Typography variant="body2" color="text.secondary">
-                  {testCase.expectedResults}
-                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center", // מרכוז אופקי
+                    alignItems: "center", // מרכוז אנכי
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {testCase.expectedResults}
+                  </Typography>
+                </Box>
               </TableCell>
 
               <TableCell sx={columnDivider}>
-                <Typography
-                  variant="body2"
-                  color={getStatusColor(testCase.status) as any}
-                  sx={{ fontWeight: 600, fontSize: "1rem" }}
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center", // מרכוז אופקי
+                    alignItems: "center", // מרכוז אנכי
+                    width: "100%",
+                    textAlign: "center",
+                  }}
                 >
-                  {getStatusLabel(testCase.status)}
-                </Typography>
+                  <Typography
+                    variant="body2"
+                    color={getStatusColor(testCase.status) as any}
+                    sx={{ fontWeight: 600, fontSize: "1rem" }}
+                  >
+                    {getStatusLabel(testCase.status)}
+                  </Typography>
+                </Box>
               </TableCell>
             </TableRow>
           ))}

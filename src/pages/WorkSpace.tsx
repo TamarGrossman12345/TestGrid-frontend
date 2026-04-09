@@ -10,20 +10,17 @@ import TestGrid from "../components/Workspace/TestGrid";
 import NewTestDialog from "../components/Workspace/NewTestDialog";
 import NewProjectAndFolderDialog from "../components/Workspace/NewProjectAndFolderDialog";
 import { useSideBarManager } from "../hooks/useSideBarManager";
-import { getTestCasesFromFile } from "../services/api";
+import { createTestCase, getTestCasesFromFile } from "../services/api";
 
 interface WorkSpaceProps {
   projects: Project[];
   onRefreshProjects: () => Promise<void>;
 }
 
-export const WorkSpace = ({
-  projects,
-  onRefreshProjects,
-}: WorkSpaceProps) => {
+export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const projectManager = useSideBarManager(onRefreshProjects);
 
-  const [activeTestCases, setActiveTestCases] =useState<TestCase[]>([]); 
+  const [activeTestCases, setActiveTestCases] = useState<TestCase[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [showNewTestDialog, setShowNewTestDialog] = useState(false);
@@ -46,6 +43,24 @@ export const WorkSpace = ({
     setOpenProject(openProject === id ? null : id);
   };
 
+const handleTestCaseCreation = async (
+    testData: Partial<TestCase>
+  ) => {
+    try {
+      await createTestCase(
+      activeFolderId!, 
+      testData.title!, 
+      testData.testSteps!, 
+      testData.expectedResults!,
+      testData.status!,
+    );
+      // אחרי יצירה מוצלחת, נשלוף מחדש את הטסטים כדי לעדכן את הטבלה
+      if (activeFolderId) handleFolderClick(activeFolderId);
+    } catch (err: any) {
+      console.error("Error creating test case:", err.response?.data || err.message);
+    }
+  };
+
   const filteredTestCases = useMemo(() => {
     return activeTestCases.filter((tc) => {
       const matchesSearch =
@@ -62,7 +77,8 @@ export const WorkSpace = ({
       total: activeTestCases.length,
       pass: activeTestCases.filter((t) => t.status === "pass").length,
       fail: activeTestCases.filter((t) => t.status === "fail").length,
-      inProgress: activeTestCases.filter((t) => t.status === "in-progress").length,
+      inProgress: activeTestCases.filter((t) => t.status === "in-progress")
+        .length,
     };
   }, [activeTestCases]);
 
@@ -156,7 +172,11 @@ export const WorkSpace = ({
         <StatsFooter {...stats} />
       </Box>
       {showNewTestDialog && (
-        <NewTestDialog onClose={() => setShowNewTestDialog(false)} fileId={activeFolderId} />
+        <NewTestDialog
+          onClose={() => setShowNewTestDialog(false)}
+          folderId={activeFolderId}
+          onSave={handleTestCaseCreation}
+        />
       )}
     </Box>
   );

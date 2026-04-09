@@ -68,8 +68,9 @@ export const createTestCase = (
   title: string,
   testSteps: string,
   expectedResults: string,
+  status: string
 ) => {
-  const bodyData = { title, testSteps, expectedResults };
+  const bodyData = { title, testSteps, expectedResults, status };
 
   return axios({
     method: "POST",
