@@ -141,10 +141,16 @@ const TestGrid = ({ testCases }: TestGridProps) => {
                 </Box>
               </TableCell>
 
-              <TableCell sx={columnDivider}>
+              <TableCell sx={{ ...columnDivider, textAlign: "right" }}>
                 <Typography
                   variant="body2"
-                  sx={{ whiteSpace: "pre-line", color: "text.secondary" }}
+                  sx={{
+                    whiteSpace: "pre-line",
+                    color: "text.secondary",
+                    display: "block",
+                    direction: "rtl", // הופך את כיוון הקריאה (המספר יופיע בצד ימין)
+                    unicodeBidi: "plaintext",
+                  }}
                 >
                   {testCase.testSteps}
                 </Typography>
