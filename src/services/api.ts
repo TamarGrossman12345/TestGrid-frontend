@@ -15,7 +15,7 @@ export const getAllProjects = () => {
 export const getTestCasesFromFile = (fileId: string) => {
   return axios({
     method: "GET",
-    url: `${baseURL}/testCase/${fileId}`,
+    url: `${baseURL}/api/testCases/get-testCases/${fileId}`,
     headers: {
       "Content-Type": "application/json",
     },
@@ -47,7 +47,9 @@ export const createProjectAndFolder = (
   description: string,
   projectId?: string,
 ) => {
-  const url = projectId ? `${baseURL}/api/folders/create-folder` : `${baseURL}/api/projects/create-project`;
+  const url = projectId
+    ? `${baseURL}/api/folders/create-folder`
+    : `${baseURL}/api/projects/create-project`;
 
   const bodyData = projectId
     ? { name, description, projectId }
@@ -68,13 +70,13 @@ export const createTestCase = (
   title: string,
   testSteps: string,
   expectedResults: string,
-  status: string
+  status: string,
 ) => {
   const bodyData = { title, testSteps, expectedResults, status };
 
   return axios({
     method: "POST",
-    url: `${baseURL}/testCases/newTestCase/${fileId}`,
+    url: `${baseURL}/api/testCases/create-newTestCase/${fileId}`,
     data: bodyData,
     headers: {
       "Content-Type": "application/json",
