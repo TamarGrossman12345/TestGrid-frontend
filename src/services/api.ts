@@ -5,7 +5,7 @@ const baseURL = "http://localhost:5000";
 export const getAllProjects = () => {
   return axios({
     method: "GET",
-    url: `${baseURL}/projects`,
+    url: `${baseURL}/api/projects/get-all-projects`,
     headers: {
       "Content-Type": "application/json",
     },
@@ -25,7 +25,7 @@ export const getTestCasesFromFile = (fileId: string) => {
 export const deleteProject = (projectId: string) => {
   return axios({
     method: "DELETE",
-    url: `${baseURL}/projects/${projectId}`,
+    url: `${baseURL}/api/projects/delete-project/${projectId}`,
     headers: {
       "Content-Type": "application/json",
     },
@@ -47,7 +47,7 @@ export const createProjectAndFolder = (
   description: string,
   projectId?: string,
 ) => {
-  const url = projectId ? `${baseURL}/files` : `${baseURL}/projects`;
+  const url = projectId ? `${baseURL}/files` : `${baseURL}/api/projects/create-project`;
 
   const bodyData = projectId
     ? { name, description, projectId }
