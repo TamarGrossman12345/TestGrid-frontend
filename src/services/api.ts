@@ -35,7 +35,7 @@ export const deleteProject = (projectId: string) => {
 export const deleteFile = (testFileId: string) => {
   return axios({
     method: "DELETE",
-    url: `${baseURL}/files/${testFileId}`,
+    url: `${baseURL}/api/folders/delete-folder/${testFileId}`,
     headers: {
       "Content-Type": "application/json",
     },
@@ -47,7 +47,7 @@ export const createProjectAndFolder = (
   description: string,
   projectId?: string,
 ) => {
-  const url = projectId ? `${baseURL}/files` : `${baseURL}/api/projects/create-project`;
+  const url = projectId ? `${baseURL}/api/folders/create-folder` : `${baseURL}/api/projects/create-project`;
 
   const bodyData = projectId
     ? { name, description, projectId }
