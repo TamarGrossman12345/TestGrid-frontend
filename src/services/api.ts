@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import type { TestCase } from "../types";
 const baseURL = "http://localhost:5000";
 
 export const getAllProjects = () => {
@@ -83,3 +83,16 @@ export const createTestCase = (
     },
   });
 };
+
+
+export const updateTestCase = (testCaseId: string, data: Partial<TestCase>) => {
+  return axios({
+    method: "PATCH",
+    url: `${baseURL}/api/testCases/update-testCase/${testCaseId}`,
+    data: data,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
+

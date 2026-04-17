@@ -9,23 +9,28 @@ import {
   Paper,
   Typography,
   Box,
+  Alert,
+  Select,
+  MenuItem,
 } from "@mui/material";
-import { TestCase } from "../../types";
+import { TestCase, TestStatus } from "../../types";
+import { getTestCasesFromFile, updateTestCase } from "../../services/api";
 
 interface TestGridProps {
   testCases: TestCase[];
+  refreshTable: (folderId: string) => void;
 }
 
 const getStatusColor = (status: string) => {
   switch (status) {
     case "pass":
-      return "success";
+      return "success.main"; // ירוק של ה-Theme
     case "fail":
-      return "error";
+      return "error.main"; // אדום של ה-Theme
     case "in-progress":
-      return "primary";
+      return "secondary.dark"; // כחול של ה-Theme
     default:
-      return "default";
+      return "text.secondary"; // אפור ברירת מחדל
   }
 };
 
@@ -39,7 +44,27 @@ const getStatusLabel = (status: string) => {
   return labels[status] || status;
 };
 
-const TestGrid = ({ testCases }: TestGridProps) => {
+const handleStatusChange = async (
+  testCaseId: string,
+  newStatus: string,
+  refreshTable: (folderId: string) => void
+) => {
+  try {
+    // אנחנו "מאלצים" את הטיפוס להיות נכון
+    const updated = await updateTestCase(testCaseId, {
+      status: newStatus as TestStatus,
+    });
+    refreshTable(updated.data.fileId);
+
+
+    // עדכון ה-State המקומי (לדוגמה)
+    // setTestCases(prev => prev.map(tc => tc.TestCaseId === id ? updated : tc));
+  } catch (error) {
+    console.error("Failed to update status", error);
+  }
+};
+
+const TestGrid = ({ testCases , refreshTable}: TestGridProps) => {
   const columnDivider = {
     borderRight: "1px solid",
     borderColor: "grey.200",
@@ -49,7 +74,7 @@ const TestGrid = ({ testCases }: TestGridProps) => {
     },
   };
 
-  return (
+  return testCases.length > 0 ? (
     <TableContainer
       component={Paper}
       sx={{ boxShadow: "none", bgcolor: "transparent" }}
@@ -129,8 +154,8 @@ const TestGrid = ({ testCases }: TestGridProps) => {
                 <Box
                   sx={{
                     display: "flex",
-                    justifyContent: "center", // מרכוז אופקי
-                    alignItems: "center", // מרכוז אנכי
+                    justifyContent: "center",
+                    alignItems: "center",
                     width: "100%",
                     textAlign: "center",
                   }}
@@ -182,13 +207,30 @@ const TestGrid = ({ testCases }: TestGridProps) => {
                     textAlign: "center",
                   }}
                 >
-                  <Typography
-                    variant="body2"
-                    color={getStatusColor(testCase.status) as any}
-                    sx={{ fontWeight: 600, fontSize: "1rem" }}
+                  <Select
+                    value={testCase.status}
+                    onChange={(e) =>
+                      handleStatusChange(
+                        testCase.TestCaseId,
+                        e.target.value,
+                        refreshTable
+                      )
+                    }
+                    size="small"
+                    sx={{
+                      color: getStatusColor(testCase.status),
+                      fontWeight: 600,
+                      "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+                      "& .MuiSelect-icon": {
+                        color: "primary.main",
+                      }, // צובע גם את החץ
+                    }}
                   >
-                    {getStatusLabel(testCase.status)}
-                  </Typography>
+                    <MenuItem value="pending">Pending</MenuItem>
+                    <MenuItem value="in-progress">In Progress</MenuItem>
+                    <MenuItem value="pass">Pass</MenuItem>
+                    <MenuItem value="fail">Fail</MenuItem>
+                  </Select>
                 </Box>
               </TableCell>
             </TableRow>
@@ -196,6 +238,26 @@ const TestGrid = ({ testCases }: TestGridProps) => {
         </TableBody>
       </Table>
     </TableContainer>
+  ) : (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        py: 10,
+        textAlign: "center",
+        opacity: 0.6,
+      }}
+    >
+      <Typography variant="h6" fontWeight="600">
+        No Test Cases Yet
+      </Typography>
+
+      <Typography variant="body2">
+        This folder is empty. Start by creating your first test case!
+      </Typography>
+    </Box>
   );
 };
 

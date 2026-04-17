@@ -175,7 +175,7 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
         />
 
         <Box sx={{ flexGrow: 1, overflow: "auto", p: 3 }}>
-          <TestGrid testCases={filteredTestCases} />
+          <TestGrid testCases={filteredTestCases} refreshTable={handleFolderClick}/>
         </Box>
 
         <StatsFooter {...stats} />
