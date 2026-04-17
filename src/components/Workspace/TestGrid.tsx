@@ -120,7 +120,7 @@ const TestGrid = ({
                 ...columnDivider,
                 bgcolor: "grey.50",
                 fontWeight: 600,
-                width: 120,
+                width: 150,
               }}
             >
               Status
@@ -195,6 +195,7 @@ const TestGrid = ({
                   }}
                 >
                   <Select
+                    IconComponent={() => null}
                     value={testCase.status}
                     onChange={(e) =>
                       handleStatusChange(
@@ -205,12 +206,18 @@ const TestGrid = ({
                     }
                     size="small"
                     sx={{
+                      display: "flex",
                       color: getStatusColor(testCase.status),
                       fontWeight: 600,
+                      transition: 'all 0.3s ease-in-out',
                       "& .MuiOutlinedInput-notchedOutline": { border: "none" },
-                      "& .MuiSelect-icon": {
-                        color: "primary.main",
-                      }, // צובע גם את החץ
+                      "& .MuiSelect-select": {
+                        paddingRight: "8px !important",
+                        paddingLeft: "8px !important",
+                      },
+                      "&:hover": {
+                        bgcolor: "rgb(243, 170, 206, 0.25)",
+                      },
                     }}
                   >
                     <MenuItem value="pending">Pending</MenuItem>
