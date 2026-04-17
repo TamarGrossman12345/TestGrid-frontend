@@ -37,7 +37,6 @@ export const useSideBarManager = (onRefresh: () => Promise<void>) => {
   };
 
   const handleDeleteProject = async (projectId: string) => {
-    if (!window.confirm("בטוחהה שאת רוצה למחוק את הפרויקט או שאת מטומטמת?")) return;
     try {
       await deleteProject(projectId);
       await onRefresh();

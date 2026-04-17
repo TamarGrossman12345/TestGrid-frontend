@@ -9,45 +9,24 @@ import {
   Paper,
   Typography,
   Box,
-  Alert,
   Select,
   MenuItem,
 } from "@mui/material";
 import { TestCase, TestStatus } from "../../types";
-import { getTestCasesFromFile, updateTestCase } from "../../services/api";
+import { updateTestCase } from "../../services/api";
+import { getStatusColor } from "../../utils/testStatus";
+import EmptyNotice from "../common/EmptyNotice";
 
 interface TestGridProps {
   testCases: TestCase[];
   refreshTable: (folderId: string) => void;
+  isFolderActive: string | undefined;
 }
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "pass":
-      return "success.main"; // ירוק של ה-Theme
-    case "fail":
-      return "error.main"; // אדום של ה-Theme
-    case "in-progress":
-      return "secondary.dark"; // כחול של ה-Theme
-    default:
-      return "text.secondary"; // אפור ברירת מחדל
-  }
-};
-
-const getStatusLabel = (status: string) => {
-  const labels: Record<string, string> = {
-    "in-progress": "In Progress",
-    pass: "Pass",
-    fail: "Fail",
-    pending: "Pending",
-  };
-  return labels[status] || status;
-};
 
 const handleStatusChange = async (
   testCaseId: string,
   newStatus: string,
-  refreshTable: (folderId: string) => void
+  refreshTable: (folderId: string) => void,
 ) => {
   try {
     // אנחנו "מאלצים" את הטיפוס להיות נכון
@@ -56,7 +35,6 @@ const handleStatusChange = async (
     });
     refreshTable(updated.data.fileId);
 
-
     // עדכון ה-State המקומי (לדוגמה)
     // setTestCases(prev => prev.map(tc => tc.TestCaseId === id ? updated : tc));
   } catch (error) {
@@ -64,7 +42,11 @@ const handleStatusChange = async (
   }
 };
 
-const TestGrid = ({ testCases , refreshTable}: TestGridProps) => {
+const TestGrid = ({
+  testCases,
+  refreshTable,
+  isFolderActive,
+}: TestGridProps) => {
   const columnDivider = {
     borderRight: "1px solid",
     borderColor: "grey.200",
@@ -74,7 +56,12 @@ const TestGrid = ({ testCases , refreshTable}: TestGridProps) => {
     },
   };
 
-  return testCases.length > 0 ? (
+  return isFolderActive === undefined ? (
+    <EmptyNotice
+      title="No open folder Yet"
+      description=" open a folder and start creating your test cases!"
+    />
+  ) : testCases.length > 0 ? (
     <TableContainer
       component={Paper}
       sx={{ boxShadow: "none", bgcolor: "transparent" }}
@@ -213,7 +200,7 @@ const TestGrid = ({ testCases , refreshTable}: TestGridProps) => {
                       handleStatusChange(
                         testCase.TestCaseId,
                         e.target.value,
-                        refreshTable
+                        refreshTable,
                       )
                     }
                     size="small"
@@ -239,25 +226,10 @@ const TestGrid = ({ testCases , refreshTable}: TestGridProps) => {
       </Table>
     </TableContainer>
   ) : (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        py: 10,
-        textAlign: "center",
-        opacity: 0.6,
-      }}
-    >
-      <Typography variant="h6" fontWeight="600">
-        No Test Cases Yet
-      </Typography>
-
-      <Typography variant="body2">
-        This folder is empty. Start by creating your first test case!
-      </Typography>
-    </Box>
+    <EmptyNotice
+      title="No Test Cases Yet"
+      description="This folder is empty. Start by creating your first test case!"
+    />
   );
 };
 

@@ -11,11 +11,19 @@ import NewTestDialog from "../components/Workspace/NewTestDialog";
 import NewProjectAndFolderDialog from "../components/Workspace/NewProjectAndFolderDialog";
 import { useSideBarManager } from "../hooks/useSideBarManager";
 import { createTestCase, getTestCasesFromFile } from "../services/api";
+import AlertNotice from "../components/common/AlertNotice";
 
 interface WorkSpaceProps {
   projects: Project[];
   onRefreshProjects: () => Promise<void>;
 }
+export type DeleteConfig = {
+  isOpen: boolean;
+  message: string;
+  title: string;
+  onConfirm: () => Promise<void> | void;
+} | null;
+
 
 export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const projectManager = useSideBarManager(onRefreshProjects);
@@ -28,6 +36,17 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const [openProject, setOpenProject] = useState<string | null>(null);
 
   const [activeFolderId, setActiveFolderId] = useState<string | undefined>();
+
+  const [deleteConfig, setDeleteConfig] = useState<DeleteConfig>(null);
+
+  const triggerDeleteProject = (projectId: string) => {
+  setDeleteConfig({
+    isOpen: true,
+    title: "Do you want to delete this project? ",
+    message: "All folders and test cases inside will be lost forever.",
+    onConfirm: () => projectManager.handleDeleteProject(projectId),
+  });
+};
 
   const handleFolderClick = async (fileId: string) => {
     try {
@@ -84,12 +103,19 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   }, [activeTestCases]);
 
   const activeProjectName = useMemo(() => {
-    if (!openProject) return "All Projects";
+    if (openProject === null) return "All Projects";
     const project = projects.find((p) => p.projectId === openProject);
     return project?.projectName || "Unknown Project";
-  }, [openProject, projects]);
+  }, [openProject]);
+
+  // const activeFolderName = useMemo(() => {
+  //   if (activeFolderId === undefined) return "All Folders";
+  //   const folder = projects.find((p) => p.projectId === openProject);
+  //   return project?.projectName || "Unknown Project";
+  // }, [activeFolderId]);
 
   return (
+    <> 
     <Box
       sx={{ display: "flex", height: "100vh", bgcolor: "background.default" }}
     >
@@ -99,10 +125,11 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
           openProject={openProject}
           handleProjectClick={handleProjectClick}
           handleDeleteFolder={projectManager.handleDeleteFolder}
-          handleDeleteProject={projectManager.handleDeleteProject}
+          handleDeleteProject={triggerDeleteProject}
           onAddNewProject={() => projectManager.handleOpenProjectDialog()}
           onAddNewFolder={(id) => projectManager.handleOpenProjectDialog(id)}
           handleFolderClick={handleFolderClick}
+
         />
         {projectManager.isProjectDialogOpen && (
           <NewProjectAndFolderDialog
@@ -153,14 +180,34 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
               }}
               variant="outlined"
               startIcon={<RefreshCw size={16} />}
+              disabled={activeFolderId === undefined}
+              sx={{
+                "&.Mui-disabled": {
+                  color: "secondary.main",
+                  opacity: 0.7,
+                  // הוספת הצבע למסגרת כאן:
+                  borderColor: "secondary.main",
+                  border: "1px solid", // מוודא שהמסגרת קיימת
+                },
+              }}
             >
               Sync
             </Button>
 
             <Button
-              variant="contained"
+              variant="outlined"
               onClick={() => setShowNewTestDialog(true)}
               startIcon={<Plus size={16} />}
+              disabled={activeFolderId === undefined}
+              sx={{
+                "&.Mui-disabled": {
+                  color: "secondary.main",
+                  opacity: 0.7,
+                  // הוספת הצבע למסגרת כאן:
+                  borderColor: "secondary.main",
+                  border: "1px solid", // מוודא שהמסגרת קיימת
+                },
+              }}
             >
               New Test
             </Button>
@@ -175,7 +222,11 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
         />
 
         <Box sx={{ flexGrow: 1, overflow: "auto", p: 3 }}>
-          <TestGrid testCases={filteredTestCases} refreshTable={handleFolderClick}/>
+          <TestGrid
+            testCases={filteredTestCases}
+            refreshTable={handleFolderClick}
+            isFolderActive={activeFolderId}
+          />
         </Box>
 
         <StatsFooter {...stats} />
@@ -188,5 +239,18 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
         />
       )}
     </Box>
+    {deleteConfig && (
+        <AlertNotice
+          open={deleteConfig.isOpen}
+          title= {deleteConfig.title}
+          message={deleteConfig.message}
+          onClose={() => setDeleteConfig(null)}
+          onConfirm={async () => {
+            await deleteConfig.onConfirm();
+            setDeleteConfig(null);
+          }}
+        />
+      )}
+    </>
   );
 };
