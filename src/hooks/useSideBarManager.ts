@@ -46,7 +46,6 @@ export const useSideBarManager = (onRefresh: () => Promise<void>) => {
   };
 
   const handleDeleteFolder = async (testFileId: string) => {
-    if (!window.confirm("את באמת מנסה למחוק את הקובץ או שאת טיפשה?")) return;
     try {
       await deleteFile(testFileId);
       await onRefresh();

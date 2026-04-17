@@ -48,6 +48,14 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   });
 };
 
+  const triggerDeleteFolder = (folderId: string) => {
+  setDeleteConfig({
+    isOpen: true,
+    title: "Do you want to delete this folder? ",
+    message: "All the test cases inside will be lost forever.",
+    onConfirm: () => projectManager.handleDeleteFolder(folderId),
+  });
+};
   const handleFolderClick = async (fileId: string) => {
     try {
       const response = await getTestCasesFromFile(fileId);
@@ -124,7 +132,7 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
           projects={projects}
           openProject={openProject}
           handleProjectClick={handleProjectClick}
-          handleDeleteFolder={projectManager.handleDeleteFolder}
+          handleDeleteFolder={triggerDeleteFolder}
           handleDeleteProject={triggerDeleteProject}
           onAddNewProject={() => projectManager.handleOpenProjectDialog()}
           onAddNewFolder={(id) => projectManager.handleOpenProjectDialog(id)}
