@@ -12,10 +12,10 @@ export const getAllProjects = () => {
   });
 };
 
-export const getTestCasesFromFile = (fileId: string) => {
+export const getTestCasesFromFile = (folderId: string) => {
   return axios({
     method: "GET",
-    url: `${baseURL}/api/testCases/get-testCases/${fileId}`,
+    url: `${baseURL}/api/testCases/get-testCases/${folderId}`,
     headers: {
       "Content-Type": "application/json",
     },
@@ -66,7 +66,7 @@ export const createProjectAndFolder = (
 };
 
 export const createTestCase = (
-  fileId: string,
+  folderId: string,
   title: string,
   testSteps: string,
   expectedResults: string,
@@ -76,7 +76,7 @@ export const createTestCase = (
 
   return axios({
     method: "POST",
-    url: `${baseURL}/api/testCases/create-newTestCase/${fileId}`,
+    url: `${baseURL}/api/testCases/create-newTestCase/${folderId}`,
     data: bodyData,
     headers: {
       "Content-Type": "application/json",
