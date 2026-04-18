@@ -3,6 +3,7 @@ import {
   createProjectAndFolder,
   deleteFile,
   deleteProject,
+  deleteTestCase,
 } from "../services/api";
 
 export const useSideBarManager = (onRefresh: () => Promise<void>) => {
@@ -53,6 +54,7 @@ export const useSideBarManager = (onRefresh: () => Promise<void>) => {
       console.error("Error deleting file", err);
     }
   };
+
 
   return {
     isProjectDialogOpen,

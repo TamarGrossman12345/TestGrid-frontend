@@ -42,6 +42,17 @@ export const deleteFile = (testFileId: string) => {
   });
 };
 
+export const deleteTestCase = (testCaseId: string) => {
+  return axios({
+    method: "DELETE",
+    url: `${baseURL}/api/testCases/delete-testCase/${testCaseId}`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
+
 export const createProjectAndFolder = (
   name: string,
   description: string,

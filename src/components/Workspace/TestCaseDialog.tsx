@@ -11,24 +11,29 @@ import {
   Typography,
 } from "@mui/material";
 
-import { X, CheckCircle2 } from "lucide-react";
+import { X, CheckCircle2, Trash } from "lucide-react";
 import { TestCase } from "../../types";
 
-interface NewTestDialogProps {
+interface TestCaseDialogProps {
   onClose: () => void;
   onSave?: (testData: TestCase) => void;
-  folderId: string | undefined;
+  initialTestData?: TestCase;
+  onDelete?: () => void;
 }
 // צריך להוסיף פונקציה לשמירה כשנוסיף את הבאקקק
-const NewTestDialog = ({ onClose, onSave, folderId }: NewTestDialogProps) => {
+const TestCaseDialog = ({
+  onClose,
+  onSave,
+  initialTestData,
+  onDelete,
+}: TestCaseDialogProps) => {
   const [formData, setFormData] = useState({
-    title: "",
-    testSteps: "",
-    expectedResult: "",
+    title: initialTestData?.title || "",
+    testSteps: initialTestData?.testSteps || "",
+    expectedResults: initialTestData?.expectedResults || "",
   });
 
-  // בהמשך אצטרך לשנות ככה שהמזהה יהיה מתוך הרשימה הקיימת שלא ייצא מצב שיש לנו טסט עם אותו מזהה יותר מפעם אחת
-  const [previewId] = useState(`TC-${Math.floor(1000 + Math.random() * 9000)}`);
+  const isEditMode = !!initialTestData;
 
   // צריך להוסיף שליחה לבאק אחרי ששומרים טסט קייס חדש
   const handleSubmit = (e: React.FormEvent) => {
@@ -39,8 +44,8 @@ const NewTestDialog = ({ onClose, onSave, folderId }: NewTestDialogProps) => {
       onSave({
         title: formData.title,
         testSteps: formData.testSteps,
-        expectedResults: formData.expectedResult, 
-        status: 'pending'
+        expectedResults: formData.expectedResults,
+        status: initialTestData?.status || "pending",
       } as TestCase);
     }
 
@@ -69,31 +74,8 @@ const NewTestDialog = ({ onClose, onSave, folderId }: NewTestDialogProps) => {
             }}
           >
             <Box>
-              <Box
-                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}
-              >
-                <Typography
-                  variant="overline"
-                  color="primary.main"
-                  fontWeight="bold"
-                >
-                  Test ID
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    bgcolor: "primary.50",
-                    px: 1,
-                    borderRadius: 1,
-                    color: "primary.700",
-                    fontWeight: 600,
-                  }}
-                >
-                  {previewId}
-                </Typography>
-              </Box>
               <Typography variant="h5" fontWeight="700">
-                Create Test Case
+                {isEditMode ? "Edit Test Case" : "Create Test Case"}
               </Typography>
             </Box>
             <IconButton
@@ -137,9 +119,9 @@ const NewTestDialog = ({ onClose, onSave, folderId }: NewTestDialogProps) => {
               fullWidth
               label="Expected Result"
               placeholder="What is the successful outcome?"
-              value={formData.expectedResult}
+              value={formData.expectedResults}
               onChange={(e) =>
-                setFormData({ ...formData, expectedResult: e.target.value })
+                setFormData({ ...formData, expectedResults: e.target.value })
               }
               multiline
               rows={2}
@@ -148,7 +130,24 @@ const NewTestDialog = ({ onClose, onSave, folderId }: NewTestDialogProps) => {
           </Box>
         </DialogContent>
 
-        <DialogActions sx={{ p: 3, pt: 1 }}>
+        <DialogActions sx={{ p: 3, pt: 1, display: "flex" }}>
+          {isEditMode && (
+            <IconButton
+              onClick={onDelete}
+              sx={{
+                color: "text.secondary",
+                fontWeight: 600,
+                mr: "auto",
+                ":hover": {
+                  color: "error.main",
+                  backgroundColor: "transparent",
+                },
+              }}
+            >
+              <Trash size={20} />
+            </IconButton>
+          )}
+
           <Button
             onClick={onClose}
             sx={{ color: "text.secondary", fontWeight: 600 }}
@@ -167,7 +166,7 @@ const NewTestDialog = ({ onClose, onSave, folderId }: NewTestDialogProps) => {
               textTransform: "none",
             }}
           >
-            Create New Test Case
+            {isEditMode ? "Save Changes" : "Create New Test Case"}
           </Button>
         </DialogActions>
       </form>
@@ -175,4 +174,4 @@ const NewTestDialog = ({ onClose, onSave, folderId }: NewTestDialogProps) => {
   );
 };
 
-export default NewTestDialog;
+export default TestCaseDialog;

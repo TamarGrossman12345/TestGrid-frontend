@@ -7,7 +7,7 @@ import StatsFooter from "../components/Workspace/StatsFooter";
 import FilterBar from "../components/Workspace/FilterBar";
 import { TestCase, User, Project } from "../types";
 import TestGrid from "../components/Workspace/TestGrid";
-import NewTestDialog from "../components/Workspace/NewTestDialog";
+import TestCaseDialog from "../components/Workspace/TestCaseDialog";
 import NewProjectAndFolderDialog from "../components/Workspace/NewProjectAndFolderDialog";
 import { useSideBarManager } from "../hooks/useSideBarManager";
 import { createTestCase, getTestCasesFromFile } from "../services/api";
@@ -24,14 +24,13 @@ export type DeleteConfig = {
   onConfirm: () => Promise<void> | void;
 } | null;
 
-
 export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const projectManager = useSideBarManager(onRefreshProjects);
 
   const [activeTestCases, setActiveTestCases] = useState<TestCase[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [showNewTestDialog, setShowNewTestDialog] = useState(false);
+  const [showTestCaseDialog, setShowTestCaseDialog] = useState(false);
 
   const [openProject, setOpenProject] = useState<string | null>(null);
 
@@ -40,22 +39,22 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const [deleteConfig, setDeleteConfig] = useState<DeleteConfig>(null);
 
   const triggerDeleteProject = (projectId: string) => {
-  setDeleteConfig({
-    isOpen: true,
-    title: "Do you want to delete this project? ",
-    message: "All folders and test cases inside will be lost forever.",
-    onConfirm: () => projectManager.handleDeleteProject(projectId),
-  });
-};
+    setDeleteConfig({
+      isOpen: true,
+      title: "Do you want to delete this project? ",
+      message: "All folders and test cases inside will be lost forever.",
+      onConfirm: () => projectManager.handleDeleteProject(projectId),
+    });
+  };
 
   const triggerDeleteFolder = (folderId: string) => {
-  setDeleteConfig({
-    isOpen: true,
-    title: "Do you want to delete this folder? ",
-    message: "All the test cases inside will be lost forever.",
-    onConfirm: () => projectManager.handleDeleteFolder(folderId),
-  });
-};
+    setDeleteConfig({
+      isOpen: true,
+      title: "Do you want to delete this folder? ",
+      message: "All the test cases inside will be lost forever.",
+      onConfirm: () => projectManager.handleDeleteFolder(folderId),
+    });
+  };
   const handleFolderClick = async (fileId: string) => {
     try {
       const response = await getTestCasesFromFile(fileId);
@@ -123,134 +122,132 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   // }, [activeFolderId]);
 
   return (
-    <> 
-    <Box
-      sx={{ display: "flex", height: "100vh", bgcolor: "background.default" }}
-    >
-      <Box sx={{ display: "flex" }}>
-        <Sidebar
-          projects={projects}
-          openProject={openProject}
-          handleProjectClick={handleProjectClick}
-          handleDeleteFolder={triggerDeleteFolder}
-          handleDeleteProject={triggerDeleteProject}
-          onAddNewProject={() => projectManager.handleOpenProjectDialog()}
-          onAddNewFolder={(id) => projectManager.handleOpenProjectDialog(id)}
-          handleFolderClick={handleFolderClick}
-
-        />
-        {projectManager.isProjectDialogOpen && (
-          <NewProjectAndFolderDialog
-            projectId={projectManager.activeProjectId}
-            onClose={projectManager.handleCloseProjectDialog}
-            onSave={projectManager.handleCreateProjectAndFolder}
-          />
-        )}
-      </Box>
-
+    <>
       <Box
-        sx={{
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-        }}
+        sx={{ display: "flex", height: "100vh", bgcolor: "background.default" }}
       >
+        <Box sx={{ display: "flex" }}>
+          <Sidebar
+            projects={projects}
+            openProject={openProject}
+            handleProjectClick={handleProjectClick}
+            handleDeleteFolder={triggerDeleteFolder}
+            handleDeleteProject={triggerDeleteProject}
+            onAddNewProject={() => projectManager.handleOpenProjectDialog()}
+            onAddNewFolder={(id) => projectManager.handleOpenProjectDialog(id)}
+            handleFolderClick={handleFolderClick}
+          />
+          {projectManager.isProjectDialogOpen && (
+            <NewProjectAndFolderDialog
+              projectId={projectManager.activeProjectId}
+              onClose={projectManager.handleCloseProjectDialog}
+              onSave={projectManager.handleCreateProjectAndFolder}
+            />
+          )}
+        </Box>
+
         <Box
           sx={{
-            p: 3,
+            flexGrow: 1,
             display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingBottom: 1,
+            flexDirection: "column",
+            overflow: "hidden",
           }}
         >
-          <Box>
-            <Typography variant="h4" fontWeight="bold">
-              Test Cases
-            </Typography>
+          <Box
+            sx={{
+              p: 3,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingBottom: 1,
+            }}
+          >
+            <Box>
+              <Typography variant="h4" fontWeight="bold">
+                Test Cases
+              </Typography>
+              <Box sx={{ display: "flex", gap: 1.5 }}>
+                <Typography variant="body2" color="text.secondary">
+                  {activeProjectName}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {filteredTestCases.length} test cases found
+                </Typography>
+              </Box>
+            </Box>
+
             <Box sx={{ display: "flex", gap: 1.5 }}>
-              <Typography variant="body2" color="text.secondary">
-                {activeProjectName}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {filteredTestCases.length} test cases found
-              </Typography>
+              <Button
+                onClick={() => {
+                  if (activeFolderId) {
+                    handleFolderClick(activeFolderId);
+                  }
+                }}
+                variant="outlined"
+                startIcon={<RefreshCw size={16} />}
+                disabled={activeFolderId === undefined}
+                sx={{
+                  "&.Mui-disabled": {
+                    color: "secondary.main",
+                    opacity: 0.7,
+                    // הוספת הצבע למסגרת כאן:
+                    borderColor: "secondary.main",
+                    border: "1px solid", // מוודא שהמסגרת קיימת
+                  },
+                }}
+              >
+                Sync
+              </Button>
+
+              <Button
+                variant="outlined"
+                onClick={() => setShowTestCaseDialog(true)}
+                startIcon={<Plus size={16} />}
+                disabled={activeFolderId === undefined}
+                sx={{
+                  "&.Mui-disabled": {
+                    color: "secondary.main",
+                    opacity: 0.7,
+                    // הוספת הצבע למסגרת כאן:
+                    borderColor: "secondary.main",
+                    border: "1px solid", // מוודא שהמסגרת קיימת
+                  },
+                }}
+              >
+                New Test
+              </Button>
             </Box>
           </Box>
 
-          <Box sx={{ display: "flex", gap: 1.5 }}>
-            <Button
-              onClick={() => {
-                if (activeFolderId) {
-                  handleFolderClick(activeFolderId);
-                }
-              }}
-              variant="outlined"
-              startIcon={<RefreshCw size={16} />}
-              disabled={activeFolderId === undefined}
-              sx={{
-                "&.Mui-disabled": {
-                  color: "secondary.main",
-                  opacity: 0.7,
-                  // הוספת הצבע למסגרת כאן:
-                  borderColor: "secondary.main",
-                  border: "1px solid", // מוודא שהמסגרת קיימת
-                },
-              }}
-            >
-              Sync
-            </Button>
-
-            <Button
-              variant="outlined"
-              onClick={() => setShowNewTestDialog(true)}
-              startIcon={<Plus size={16} />}
-              disabled={activeFolderId === undefined}
-              sx={{
-                "&.Mui-disabled": {
-                  color: "secondary.main",
-                  opacity: 0.7,
-                  // הוספת הצבע למסגרת כאן:
-                  borderColor: "secondary.main",
-                  border: "1px solid", // מוודא שהמסגרת קיימת
-                },
-              }}
-            >
-              New Test
-            </Button>
-          </Box>
-        </Box>
-
-        <FilterBar
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          filterStatus={filterStatus}
-          setFilterStatus={setFilterStatus}
-        />
-
-        <Box sx={{ flexGrow: 1, overflow: "auto", p: 3 }}>
-          <TestGrid
-            testCases={filteredTestCases}
-            refreshTable={handleFolderClick}
-            isFolderActive={activeFolderId}
+          <FilterBar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            filterStatus={filterStatus}
+            setFilterStatus={setFilterStatus}
           />
-        </Box>
 
-        <StatsFooter {...stats} />
+          <Box sx={{ flexGrow: 1, overflow: "auto", p: 3 }}>
+            <TestGrid
+              testCases={filteredTestCases}
+              refreshTable={handleFolderClick}
+              isFolderActive={activeFolderId}
+            />
+          </Box>
+
+          <StatsFooter {...stats} />
+        </Box>
+        {showTestCaseDialog && (
+          <TestCaseDialog
+            onClose={() => setShowTestCaseDialog(false)}
+            onSave={handleTestCaseCreation}
+          />
+        )}
       </Box>
-      {showNewTestDialog && (
-        <NewTestDialog
-          onClose={() => setShowNewTestDialog(false)}
-          folderId={activeFolderId}
-          onSave={handleTestCaseCreation}
-        />
-      )}
-    </Box>
-    {deleteConfig && (
+      {deleteConfig && (
         <AlertNotice
           open={deleteConfig.isOpen}
-          title= {deleteConfig.title}
+          title={deleteConfig.title}
           message={deleteConfig.message}
           onClose={() => setDeleteConfig(null)}
           onConfirm={async () => {

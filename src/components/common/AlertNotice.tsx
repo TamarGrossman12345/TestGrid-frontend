@@ -7,7 +7,7 @@ import {
   Typography, 
   Button 
 } from "@mui/material";
-import { AlertTriangle } from "lucide-react"; // אייקון אזהרה תמיד מוסיף
+import { AlertTriangle } from "lucide-react"; 
 
 interface AlertNoticeProps {
   open: boolean;
