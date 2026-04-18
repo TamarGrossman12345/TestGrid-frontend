@@ -1,4 +1,3 @@
-// src/components/dashboard/FilterBar.tsx
 import {
   Box,
   TextField,
@@ -8,6 +7,7 @@ import {
   Button,
   Paper,
   Divider,
+  useTheme,
 } from "@mui/material";
 import {
   Search,
@@ -17,7 +17,7 @@ import {
   FileSpreadsheet,
 } from "lucide-react";
 import { TestCase } from "../../types";
-import * as XLSX from "xlsx";
+import { handleExportToExcel } from "../../utils/excelActions";
 
 interface FilterBarProps {
   searchQuery: string;
@@ -36,31 +36,16 @@ const FilterBar = ({
   activeFolderId,
   currentTestCases,
 }: FilterBarProps) => {
+  const theme = useTheme();
+  const isControlDisabled = activeFolderId === undefined;
+
   const buttonDisableStyle = {
+    textTransform: "none",
+    fontWeight: 600,
     "&.Mui-disabled": {
-      color: "secondary.main",
+      color: theme.palette.text.disabled,
       opacity: 0.7,
     },
-  };
-
-  const handleExport = () => {
-    if (currentTestCases.length === 0) return;
-    const dataToExport = currentTestCases.map((tc) => ({
-      ID: `TG-${tc.serialId}`,
-      Title: tc.title,
-      "Test Steps": tc.testSteps,
-      "Expected Results": tc.expectedResults,
-      Status: tc.status,
-    }));
-
-    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "TestCases");
-
-    XLSX.writeFile(
-      workbook,
-      `TestCases_Export_${new Date().toLocaleDateString()}.xlsx`,
-    );
   };
 
   return (
@@ -69,7 +54,7 @@ const FilterBar = ({
       sx={{
         borderBottom: "2px solid",
         borderColor: "primary.light",
-        p: 2,
+        p: 1.5,
         bgcolor: "#ffffff",
       }}
     >
@@ -83,7 +68,7 @@ const FilterBar = ({
       >
         <Box sx={{ display: "flex", gap: 2, flexGrow: 1 }}>
           <TextField
-            disabled={activeFolderId === undefined}
+            disabled={isControlDisabled}
             size="small"
             placeholder="Search test cases..."
             value={searchQuery}
@@ -91,21 +76,12 @@ const FilterBar = ({
             sx={{
               width: "100%",
               maxWidth: 500,
-              borderColor: "grey.300",
               "& .MuiOutlinedInput-root": {
                 "&.Mui-disabled": {
                   "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#db2777",
-                    opacity: 0.5,
+                    borderColor: theme.palette.primary.main,
                   },
                 },
-              },
-              "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
-                {
-                  borderColor: "primary.main",
-                },
-              "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                borderColor: "primary.main",
               },
             }}
             InputProps={{
@@ -113,9 +89,8 @@ const FilterBar = ({
                 <InputAdornment position="start">
                   <Search
                     size={18}
-                    // משנה את שקיפות האייקון לפי המצב
                     style={{
-                      color: "#db2777",
+                      color: theme.palette.secondary.main,
                       opacity: activeFolderId === undefined ? 0.5 : 1,
                     }}
                   />
@@ -125,27 +100,16 @@ const FilterBar = ({
           />
 
           <Select
-            disabled={activeFolderId === undefined}
+            disabled={isControlDisabled}
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
             size="small"
             sx={{
               minWidth: 140,
-              color: "primary.main",
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "grey.300",
-              },
-
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "primary.main",
-              },
+              color: "grey.600",
               "&.Mui-disabled": {
-                "& .MuiSelect-select": {
-                  WebkitTextFillColor: "secondary.main",
-                },
                 "& .MuiOutlinedInput-notchedOutline": {
                   borderColor: "secondary.main",
-                  opacity: 0.5,
                 },
               },
             }}
@@ -165,7 +129,7 @@ const FilterBar = ({
           }}
         >
           <Button
-            disabled={activeFolderId === undefined}
+            disabled={isControlDisabled}
             variant="text"
             size="small"
             startIcon={<FileSpreadsheet size={16} />}
@@ -182,13 +146,12 @@ const FilterBar = ({
 
           <Button
             variant="text"
-            disabled={activeFolderId === undefined}
+            disabled={isControlDisabled}
             size="small"
             startIcon={<Upload size={18} />}
             sx={{
               ...buttonDisableStyle,
-              color: "primary.main",
-              fontWeight: "bold",
+              color: theme.palette.primary.main,
             }}
           >
             Import
@@ -202,13 +165,12 @@ const FilterBar = ({
           <Button
             variant="text"
             size="small"
-            disabled={activeFolderId === undefined}
+            disabled={isControlDisabled || currentTestCases.length === 0}
             startIcon={<Download size={18} />}
-            onClick={handleExport}
+            onClick={() => handleExportToExcel(currentTestCases)}
             sx={{
               ...buttonDisableStyle,
-              color: "primary.main",
-              fontWeight: "bold",
+              color: theme.palette.primary.main,
             }}
           >
             Export
