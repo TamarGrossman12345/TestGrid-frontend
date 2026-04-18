@@ -1,7 +1,6 @@
 // src/pages/Dashboard.tsx
 import React, { useState, useMemo } from "react";
-import { Box, Typography, Button } from "@mui/material";
-import { RefreshCw, Plus } from "lucide-react";
+import { Box } from "@mui/material";
 import Sidebar from "../components/layout/Sidebar";
 import StatsFooter from "../components/Workspace/StatsFooter";
 import FilterBar from "../components/Workspace/FilterBar";
@@ -10,6 +9,7 @@ import TestGrid from "../components/Workspace/TestGrid";
 import TestCaseDialog from "../components/Workspace/TestCaseDialog";
 import NewProjectAndFolderDialog from "../components/Workspace/NewProjectAndFolderDialog";
 import { useSideBarManager } from "../hooks/useSideBarManager";
+import WorkspaceHeader from "../components/Workspace/WorkspaceHeader";
 import {
   createTestCase,
   deleteTestCase,
@@ -120,8 +120,8 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const triggerDeleteTestCase = (testCaseId: string) => {
     setDeleteConfig({
       isOpen: true,
-      title: "Delete Test Case",
-      message: "Are you sure you want to delete this test case?",
+      title: "Do you want to delete this test case? ",
+      message: "All the information inside will be lost forever.",
       onConfirm: async () => {
         await deleteTestCase(testCaseId);
         setSelectedTest(null);
@@ -196,71 +196,13 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
             overflow: "hidden",
           }}
         >
-          <Box
-            sx={{
-              p: 3,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              paddingBottom: 1,
-            }}
-          >
-            <Box>
-              <Typography variant="h4" fontWeight="bold">
-                Test Cases
-              </Typography>
-              <Box sx={{ display: "flex", gap: 1.5 }}>
-                <Typography variant="body2" color="text.secondary">
-                  {activeProjectName}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {filteredTestCases.length} test cases found
-                </Typography>
-              </Box>
-            </Box>
-
-            <Box sx={{ display: "flex", gap: 1.5 }}>
-              <Button
-                onClick={() => {
-                  if (activeFolderId) {
-                    handleFolderClick(activeFolderId);
-                  }
-                }}
-                variant="outlined"
-                startIcon={<RefreshCw size={16} />}
-                disabled={activeFolderId === undefined}
-                sx={{
-                  "&.Mui-disabled": {
-                    color: "secondary.main",
-                    opacity: 0.7,
-                    // הוספת הצבע למסגרת כאן:
-                    borderColor: "secondary.main",
-                    border: "1px solid", // מוודא שהמסגרת קיימת
-                  },
-                }}
-              >
-                Sync
-              </Button>
-
-              <Button
-                variant="outlined"
-                onClick={() => setShowTestCaseDialog(true)}
-                startIcon={<Plus size={16} />}
-                disabled={activeFolderId === undefined}
-                sx={{
-                  "&.Mui-disabled": {
-                    color: "secondary.main",
-                    opacity: 0.7,
-                    // הוספת הצבע למסגרת כאן:
-                    borderColor: "secondary.main",
-                    border: "1px solid", // מוודא שהמסגרת קיימת
-                  },
-                }}
-              >
-                New Test
-              </Button>
-            </Box>
-          </Box>
+          <WorkspaceHeader
+            activeProjectName={activeProjectName}
+            testCasesCount={filteredTestCases.length}
+            activeFolderId={activeFolderId}
+            onSync={() => activeFolderId && handleFolderClick(activeFolderId)}
+            onNewTest={() => setShowTestCaseDialog(true)}
+          />
 
           <FilterBar
             searchQuery={searchQuery}
