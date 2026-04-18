@@ -16,6 +16,8 @@ import {
   Download,
   FileSpreadsheet,
 } from "lucide-react";
+import { TestCase } from "../../types";
+import * as XLSX from "xlsx";
 
 interface FilterBarProps {
   searchQuery: string;
@@ -23,6 +25,7 @@ interface FilterBarProps {
   filterStatus: string;
   setFilterStatus: (val: string) => void;
   activeFolderId: string | undefined;
+  currentTestCases: TestCase[];
 }
 
 const FilterBar = ({
@@ -31,12 +34,33 @@ const FilterBar = ({
   filterStatus,
   setFilterStatus,
   activeFolderId,
+  currentTestCases,
 }: FilterBarProps) => {
   const buttonDisableStyle = {
     "&.Mui-disabled": {
       color: "secondary.main",
       opacity: 0.7,
     },
+  };
+
+  const handleExport = () => {
+    if (currentTestCases.length === 0) return;
+    const dataToExport = currentTestCases.map((tc) => ({
+      ID: `TG-${tc.serialId}`,
+      Title: tc.title,
+      "Test Steps": tc.testSteps,
+      "Expected Results": tc.expectedResults,
+      Status: tc.status,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "TestCases");
+
+    XLSX.writeFile(
+      workbook,
+      `TestCases_Export_${new Date().toLocaleDateString()}.xlsx`,
+    );
   };
 
   return (
@@ -71,7 +95,7 @@ const FilterBar = ({
               "& .MuiOutlinedInput-root": {
                 "&.Mui-disabled": {
                   "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#db2777 !important",
+                    borderColor: "#db2777",
                     opacity: 0.5,
                   },
                 },
@@ -180,6 +204,7 @@ const FilterBar = ({
             size="small"
             disabled={activeFolderId === undefined}
             startIcon={<Download size={18} />}
+            onClick={handleExport}
             sx={{
               ...buttonDisableStyle,
               color: "primary.main",

@@ -84,7 +84,6 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
         testData.expectedResults!,
         testData.status!,
       );
-      // אחרי יצירה מוצלחת, נשלוף מחדש את הטסטים כדי לעדכן את הטבלה
       if (activeFolderId) handleFolderClick(activeFolderId);
     } catch (err: any) {
       console.error(
@@ -210,6 +209,7 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
             filterStatus={filterStatus}
             setFilterStatus={setFilterStatus}
             activeFolderId={activeFolderId}
+            currentTestCases={filteredTestCases}
           />
 
           <Box sx={{ flexGrow: 1, overflow: "auto", p: 3 }}>
