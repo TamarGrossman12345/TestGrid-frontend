@@ -5,12 +5,17 @@ import { RefreshCw, Plus } from "lucide-react";
 import Sidebar from "../components/layout/Sidebar";
 import StatsFooter from "../components/Workspace/StatsFooter";
 import FilterBar from "../components/Workspace/FilterBar";
-import { TestCase, User, Project } from "../types";
+import { TestCase, User, Project, TestStatus } from "../types";
 import TestGrid from "../components/Workspace/TestGrid";
 import TestCaseDialog from "../components/Workspace/TestCaseDialog";
 import NewProjectAndFolderDialog from "../components/Workspace/NewProjectAndFolderDialog";
 import { useSideBarManager } from "../hooks/useSideBarManager";
-import { createTestCase, getTestCasesFromFile } from "../services/api";
+import {
+  createTestCase,
+  deleteTestCase,
+  getTestCasesFromFile,
+  updateTestCase,
+} from "../services/api";
 import AlertNotice from "../components/common/AlertNotice";
 
 interface WorkSpaceProps {
@@ -37,6 +42,7 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const [activeFolderId, setActiveFolderId] = useState<string | undefined>();
 
   const [deleteConfig, setDeleteConfig] = useState<DeleteConfig>(null);
+  const [selectedTest, setSelectedTest] = useState<TestCase | null>(null);
 
   const triggerDeleteProject = (projectId: string) => {
     setDeleteConfig({
@@ -86,6 +92,42 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
         err.response?.data || err.message,
       );
     }
+  };
+
+  const handleStatusChange = async (
+    testCaseId: string,
+    newStatus: TestStatus,
+  ) => {
+    try {
+      await updateTestCase(testCaseId, { status: newStatus });
+      if (activeFolderId) handleFolderClick(activeFolderId);
+    } catch (error) {
+      console.error("Failed to update status", error);
+    }
+  };
+
+  const handleSaveEdit = async (updatedData: Partial<TestCase>) => {
+    if (!selectedTest) return;
+    try {
+      await updateTestCase(selectedTest.TestCaseId, updatedData);
+      if (activeFolderId) handleFolderClick(activeFolderId);
+      setSelectedTest(null);
+    } catch (error) {
+      console.error("Failed to update test case", error);
+    }
+  };
+
+  const triggerDeleteTestCase = (testCaseId: string) => {
+    setDeleteConfig({
+      isOpen: true,
+      title: "Delete Test Case",
+      message: "Are you sure you want to delete this test case?",
+      onConfirm: async () => {
+        await deleteTestCase(testCaseId);
+        setSelectedTest(null);
+        if (activeFolderId) handleFolderClick(activeFolderId);
+      },
+    });
   };
 
   const filteredTestCases = useMemo(() => {
@@ -230,7 +272,8 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
           <Box sx={{ flexGrow: 1, overflow: "auto", p: 3 }}>
             <TestGrid
               testCases={filteredTestCases}
-              refreshTable={handleFolderClick}
+              onStatusChange={handleStatusChange}
+              onEditTest={setSelectedTest}
               isFolderActive={activeFolderId}
             />
           </Box>
@@ -241,6 +284,14 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
           <TestCaseDialog
             onClose={() => setShowTestCaseDialog(false)}
             onSave={handleTestCaseCreation}
+          />
+        )}
+        {selectedTest && (
+          <TestCaseDialog
+            initialTestData={selectedTest}
+            onClose={() => setSelectedTest(null)}
+            onSave={handleSaveEdit}
+            onDelete={() => triggerDeleteTestCase(selectedTest.TestCaseId)}
           />
         )}
       </Box>

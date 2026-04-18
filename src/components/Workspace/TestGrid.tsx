@@ -13,56 +13,22 @@ import {
   MenuItem,
 } from "@mui/material";
 import { TestCase, TestStatus } from "../../types";
-import { deleteTestCase, updateTestCase } from "../../services/api";
 import { getStatusColor } from "../../utils/testStatus";
 import EmptyNotice from "../common/EmptyNotice";
-import TestCaseDialog from "./TestCaseDialog";
 
 interface TestGridProps {
   testCases: TestCase[];
-  refreshTable: (folderId: string) => void;
+  onStatusChange: (testCaseId: string, newStatus: TestStatus) => Promise<void>;
+  onEditTest: (testCase: TestCase) => void;
   isFolderActive: string | undefined;
 }
 
 const TestGrid = ({
   testCases,
-  refreshTable,
+  onStatusChange,
+  onEditTest,
   isFolderActive,
 }: TestGridProps) => {
-  const [selectedTest, setSelectedTest] = useState<TestCase | null>(null);
-
-  const handleStatusChange = async (testCaseId: string, newStatus: string) => {
-    try {
-      const updated = await updateTestCase(testCaseId, {
-        status: newStatus as TestStatus,
-      });
-      refreshTable(updated.data.fileId);
-    } catch (error) {
-      console.error("Failed to update status", error);
-    }
-  };
-
-  const handleDeleteTestCase = async (testCaseId: string) => {
-    try {
-      await deleteTestCase(testCaseId);
-      setSelectedTest(null);
-      await refreshTable(isFolderActive!);
-    } catch (err) {
-      console.error("Error deleting file", err);
-    }
-  };
-
-  const handleSaveEdit = async (updatedData: Partial<TestCase>) => {
-    if (!selectedTest) return;
-    try {
-      await updateTestCase(selectedTest.TestCaseId, updatedData);
-      refreshTable(isFolderActive!); // רענון הטבלה
-      setSelectedTest(null); // סגירת הדיאלוג
-    } catch (error) {
-      console.error("Failed to update test case", error);
-    }
-  };
-
   if (isFolderActive === undefined) {
     return (
       <EmptyNotice
@@ -152,7 +118,7 @@ const TestGrid = ({
             {testCases.map((testCase) => (
               <TableRow
                 key={testCase.TestCaseId}
-                onClick={() => setSelectedTest(testCase)}
+                onClick={() => onEditTest(testCase)}
                 sx={{
                   cursor: "pointer",
                   "&:hover": { bgcolor: "action.hover" },
@@ -205,7 +171,10 @@ const TestGrid = ({
                       IconComponent={() => null}
                       value={testCase.status}
                       onChange={(e) =>
-                        handleStatusChange(testCase.TestCaseId, e.target.value)
+                        onStatusChange(
+                          testCase.TestCaseId,
+                          e.target.value as TestStatus,
+                        )
                       }
                       size="small"
                       sx={{
@@ -230,15 +199,6 @@ const TestGrid = ({
           </TableBody>
         </Table>
       </TableContainer>
-
-      {selectedTest && (
-        <TestCaseDialog
-          initialTestData={selectedTest}
-          onClose={() => setSelectedTest(null)}
-          onSave={handleSaveEdit}
-          onDelete={() => handleDeleteTestCase(selectedTest.TestCaseId)}
-        />
-      )}
     </>
   );
 };
