@@ -17,7 +17,7 @@ const WorkspaceHeader = ({
   onSync,
   onNewTest,
 }: WorkspaceHeaderProps) => {
-  const buttonStyle = {
+  const buttonDisableStyle = {
     "&.Mui-disabled": {
       color: "secondary.main",
       opacity: 0.7,
@@ -56,7 +56,7 @@ const WorkspaceHeader = ({
           variant="outlined"
           startIcon={<RefreshCw size={16} />}
           disabled={activeFolderId === undefined}
-          sx={buttonStyle}
+          sx={buttonDisableStyle}
         >
           Sync
         </Button>
@@ -66,7 +66,7 @@ const WorkspaceHeader = ({
           onClick={onNewTest}
           startIcon={<Plus size={16} />}
           disabled={activeFolderId === undefined}
-          sx={buttonStyle}
+          sx={buttonDisableStyle}
         >
           New Test
         </Button>

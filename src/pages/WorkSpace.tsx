@@ -209,6 +209,7 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
             setSearchQuery={setSearchQuery}
             filterStatus={filterStatus}
             setFilterStatus={setFilterStatus}
+            activeFolderId={activeFolderId}
           />
 
           <Box sx={{ flexGrow: 1, overflow: "auto", p: 3 }}>
