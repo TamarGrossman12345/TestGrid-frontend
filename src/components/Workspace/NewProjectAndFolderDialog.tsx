@@ -17,12 +17,14 @@ interface NewProjectAndFolderDialogProps {
   onClose: () => void;
   onSave: (name: string, description: string, projectId?: string) => void;
   projectId?: string; 
+  open: boolean;
 }
 
 function NewProjectAndFolderDialog({
   onClose,
   onSave,
   projectId,
+  open,
 }: NewProjectAndFolderDialogProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -37,7 +39,7 @@ function NewProjectAndFolderDialog({
 
   return (
     <Dialog
-      open
+      open={open}
       onClose={onClose}
       maxWidth="xs"
       fullWidth

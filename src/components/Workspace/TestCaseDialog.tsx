@@ -39,7 +39,6 @@ const TestCaseDialog = ({
     expectedResults: initialTestData?.expectedResults || "",
   });
 
-  // צריך להוסיף שליחה לבאק אחרי ששומרים טסט קייס חדש
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 

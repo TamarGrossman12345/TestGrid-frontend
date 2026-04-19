@@ -1,5 +1,5 @@
 // src/pages/Dashboard.tsx
-import React, { useState, useMemo, act } from "react";
+import React, { useState, useMemo } from "react";
 import { Alert, Box, Snackbar } from "@mui/material";
 import Sidebar from "../components/layout/Sidebar";
 import StatsFooter from "../components/Workspace/StatsFooter";
@@ -10,9 +10,7 @@ import TestCaseDialog from "../components/Workspace/TestCaseDialog";
 import NewProjectAndFolderDialog from "../components/Workspace/NewProjectAndFolderDialog";
 import { useSideBarManager } from "../hooks/useSideBarManager";
 import WorkspaceHeader from "../components/Workspace/WorkspaceHeader";
-import {
-  getTestCasesFromFile,
-} from "../services/api";
+import { getTestCasesFromFile } from "../services/api";
 import AlertNotice from "../components/common/AlertNotice";
 import { DELETE_CONFIGS } from "../constants/deleteConfigs";
 import { useNotification } from "../components/common/NotificationContext";
@@ -32,6 +30,7 @@ export type DeleteConfig = {
 export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const projectManager = useSideBarManager(onRefreshProjects);
   const testCasesManger = useTestCasesManager();
+  const { showNotification } = useNotification();
 
   const [activeTestCases, setActiveTestCases] = useState<TestCase[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -70,15 +69,14 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
           if (type === "testCase") {
             await projectManager.handleDeleteTestCase(id);
             testCasesManger.setSelectedTest(null);
-
           }
-        } catch(err) {
-          console.log(err);
+        } catch (err) {
+          showNotification("Failed to delete item. Please try again.", "error");
+          console.error(err);
         }
       },
     });
-  }
-  
+  };
 
   const handleFolderClick = async (fileId: string) => {
     try {
@@ -143,13 +141,12 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
             onAddNewFolder={(id) => projectManager.handleOpenProjectDialog(id)}
             handleFolderClick={handleFolderClick}
           />
-          {projectManager.isProjectDialogOpen && (
-            <NewProjectAndFolderDialog
-              projectId={projectManager.activeProjectId}
-              onClose={projectManager.handleCloseProjectDialog}
-              onSave={projectManager.handleCreateProjectAndFolder}
-            />
-          )}
+          <NewProjectAndFolderDialog
+            open={projectManager.isProjectDialogOpen}
+            projectId={projectManager.activeProjectId}
+            onClose={projectManager.handleCloseProjectDialog}
+            onSave={projectManager.handleCreateProjectAndFolder}
+          />
         </Box>
 
         <Box
