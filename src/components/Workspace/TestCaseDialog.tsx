@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -15,9 +15,10 @@ import { X, CheckCircle2, Trash } from "lucide-react";
 import { TestCase } from "../../types";
 
 interface TestCaseDialogProps {
+  open: boolean;
   onClose: () => void;
   onSave?: (testData: TestCase) => void;
-  initialTestData?: TestCase;
+  initialTestData?: TestCase | null;
   onDelete?: () => void;
 }
 // צריך להוסיף פונקציה לשמירה כשנוסיף את הבאקקק
@@ -26,14 +27,19 @@ const TestCaseDialog = ({
   onSave,
   initialTestData,
   onDelete,
+  open,
 }: TestCaseDialogProps) => {
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [submitButtonText, setSubmitButtonText] = useState("");
+  const [showDelete, setShowDelete] = useState(false);
+
   const [formData, setFormData] = useState({
     title: initialTestData?.title || "",
     testSteps: initialTestData?.testSteps || "",
     expectedResults: initialTestData?.expectedResults || "",
   });
 
-  const isEditMode = !!initialTestData;
+  const isEditMode = Boolean(initialTestData);
 
   // צריך להוסיף שליחה לבאק אחרי ששומרים טסט קייס חדש
   const handleSubmit = (e: React.FormEvent) => {
@@ -54,9 +60,24 @@ const TestCaseDialog = ({
     onClose();
   };
 
+  useEffect(() => {
+    if (open) {
+      const isEdit = Boolean(initialTestData);
+
+      setDialogTitle(isEdit ? "Edit Test Case" : "Create Test Case");
+      setSubmitButtonText(isEdit ? "Save Changes" : "Create New Test Case");
+      setShowDelete(isEdit);
+
+      setFormData({
+        title: initialTestData?.title || "",
+        testSteps: initialTestData?.testSteps || "",
+        expectedResults: initialTestData?.expectedResults || "",
+      });
+    }
+  }, [open, initialTestData]);
   return (
     <Dialog
-      open
+      open={open}
       onClose={onClose}
       maxWidth="sm"
       fullWidth
@@ -75,7 +96,7 @@ const TestCaseDialog = ({
           >
             <Box>
               <Typography variant="h5" fontWeight="700">
-                {isEditMode ? "Edit Test Case" : "Create Test Case"}
+                {dialogTitle}
               </Typography>
             </Box>
             <IconButton
@@ -131,7 +152,7 @@ const TestCaseDialog = ({
         </DialogContent>
 
         <DialogActions sx={{ p: 3, pt: 1, display: "flex" }}>
-          {isEditMode && (
+          {isEditMode && onDelete && (
             <IconButton
               onClick={onDelete}
               sx={{
@@ -166,7 +187,7 @@ const TestCaseDialog = ({
               textTransform: "none",
             }}
           >
-            {isEditMode ? "Save Changes" : "Create New Test Case"}
+            {submitButtonText}
           </Button>
         </DialogActions>
       </form>

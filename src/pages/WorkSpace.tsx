@@ -95,7 +95,6 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
       if (activeFolderId) handleFolderClick(activeFolderId);
     } catch (err: any) {
       showNotification("failed to create test case!", "error");
-
     }
   };
 
@@ -216,20 +215,21 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
 
           <StatsFooter {...stats} />
         </Box>
-        {showTestCaseDialog && (
-          <TestCaseDialog
-            onClose={() => setShowTestCaseDialog(false)}
-            onSave={handleTestCaseCreation}
-          />
-        )}
-        {selectedTest && (
-          <TestCaseDialog
-            initialTestData={selectedTest}
-            onClose={() => setSelectedTest(null)}
-            onSave={handleSaveEdit}
-            onDelete={() => triggerDelete("testCase", selectedTest.TestCaseId)}
-          />
-        )}
+        <TestCaseDialog
+  
+          open={showTestCaseDialog || Boolean(selectedTest)}
+          initialTestData={selectedTest}
+          onClose={() => {
+            setShowTestCaseDialog(false);
+            setSelectedTest(null);
+          }}
+          onSave={selectedTest ? handleSaveEdit : handleTestCaseCreation}
+          onDelete={
+            selectedTest
+              ? () => triggerDelete("testCase", selectedTest.TestCaseId)
+              : undefined
+          }
+        />
       </Box>
       {deleteConfig && (
         <AlertNotice
