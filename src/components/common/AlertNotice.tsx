@@ -1,13 +1,12 @@
-import { 
-
-  Dialog, 
-  DialogTitle, 
-  DialogContent, 
-  DialogActions, 
-  Typography, 
-  Button 
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Typography,
+  Button,
 } from "@mui/material";
-import { AlertTriangle } from "lucide-react"; 
+import { AlertTriangle } from "lucide-react";
 
 interface AlertNoticeProps {
   open: boolean;
@@ -17,18 +16,26 @@ interface AlertNoticeProps {
   message: string;
 }
 
-const AlertNotice = ({ open, onClose, onConfirm, title = "Are you sure?", message }: AlertNoticeProps) => {
+const AlertNotice = ({
+  open,
+  onClose,
+  onConfirm,
+  title = "Are you sure?",
+  message,
+}: AlertNoticeProps) => {
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={onClose}
-      maxWidth="xs" 
+      maxWidth="xs"
       fullWidth
       PaperProps={{
         sx: { borderRadius: 3, p: 1 },
       }}
     >
-      <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1.5, pt: 3 }}>
+      <DialogTitle
+        sx={{ display: "flex", alignItems: "center", gap: 1.5, pt: 3 }}
+      >
         <AlertTriangle color="#ed25b1" size={24} />
         <Typography variant="h6" fontWeight="bold">
           {title}
@@ -45,11 +52,11 @@ const AlertNotice = ({ open, onClose, onConfirm, title = "Are you sure?", messag
         <Button onClick={onClose} color="inherit" variant="text">
           Cancel
         </Button>
-        <Button 
-          onClick={onConfirm} 
-          variant="contained" 
+        <Button
+          onClick={onConfirm}
+          variant="contained"
           disableElevation
-          sx={{ borderRadius: 2 , bgcolor: "primary.main"}}
+          sx={{ borderRadius: 2, bgcolor: "primary.main" }}
         >
           Delete
         </Button>

@@ -1,16 +1,16 @@
-export type TestStatus = 'pass' | 'fail' | 'in-progress' | 'pending';
+export type TestStatus = "pass" | "fail" | "in-progress" | "pending";
 
 export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'qa-engineer' | 'viewer';
+  role: "admin" | "qa-engineer" | "viewer";
   avatar: string;
   color: string;
 }
 
 export interface TestCase {
-  TestCaseId : string;
+  TestCaseId: string;
   serialId: number;
   title: string;
   testSteps: string;
@@ -29,8 +29,8 @@ export interface Project {
   projectId: string;
   projectName: string;
   description?: string;
-  files: TestFile[]; 
-  isPrivate?: boolean; 
+  files: TestFile[];
+  isPrivate?: boolean;
 }
 
 export interface ActiveUser {

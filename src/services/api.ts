@@ -52,7 +52,6 @@ export const deleteTestCase = (testCaseId: string) => {
   });
 };
 
-
 export const createProjectAndFolder = (
   name: string,
   description: string,
@@ -95,7 +94,6 @@ export const createTestCase = (
   });
 };
 
-
 export const updateTestCase = (testCaseId: string, data: Partial<TestCase>) => {
   return axios({
     method: "PATCH",
@@ -105,5 +103,4 @@ export const updateTestCase = (testCaseId: string, data: Partial<TestCase>) => {
       "Content-Type": "application/json",
     },
   });
-}
-
+};

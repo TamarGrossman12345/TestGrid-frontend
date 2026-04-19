@@ -12,11 +12,10 @@ import {
 } from "@mui/material";
 import { X, Folder, FileText } from "lucide-react";
 
-
 interface NewProjectAndFolderDialogProps {
   onClose: () => void;
   onSave: (name: string, description: string, projectId?: string) => void;
-  projectId?: string; 
+  projectId?: string;
   open: boolean;
 }
 

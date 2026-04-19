@@ -1,4 +1,3 @@
-
 import {
   Box,
   Drawer,
@@ -25,7 +24,6 @@ interface SidebarProps {
   handleDeleteFolder: (testFileId: string) => void;
   handleDeleteProject: (projectId: string) => void;
   handleFolderClick: (folderId: string) => void;
-  
 }
 
 const Sidebar = ({

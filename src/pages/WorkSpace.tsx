@@ -1,10 +1,10 @@
 // src/pages/Dashboard.tsx
 import React, { useState, useMemo } from "react";
-import { Alert, Box, Snackbar } from "@mui/material";
+import { Box } from "@mui/material";
 import Sidebar from "../components/layout/Sidebar";
 import StatsFooter from "../components/Workspace/StatsFooter";
 import FilterBar from "../components/Workspace/FilterBar";
-import { TestCase, User, Project, TestStatus } from "../types";
+import { Project } from "../types";
 import TestGrid from "../components/Workspace/TestGrid";
 import TestCaseDialog from "../components/Workspace/TestCaseDialog";
 import NewProjectAndFolderDialog from "../components/Workspace/NewProjectAndFolderDialog";
@@ -31,7 +31,6 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const projectManager = useSideBarManager(onRefreshProjects);
   const testCasesManger = useTestCasesManager();
   const { showNotification } = useNotification();
-
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -106,10 +105,13 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const stats = useMemo(() => {
     return {
       total: testCasesManger.activeTestCases.length,
-      pass: testCasesManger.activeTestCases.filter((t) => t.status === "pass").length,
-      fail: testCasesManger.activeTestCases.filter((t) => t.status === "fail").length,
-      inProgress: testCasesManger.activeTestCases.filter((t) => t.status === "in-progress")
+      pass: testCasesManger.activeTestCases.filter((t) => t.status === "pass")
         .length,
+      fail: testCasesManger.activeTestCases.filter((t) => t.status === "fail")
+        .length,
+      inProgress: testCasesManger.activeTestCases.filter(
+        (t) => t.status === "in-progress",
+      ).length,
     };
   }, [testCasesManger.activeTestCases]);
 

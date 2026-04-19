@@ -3,7 +3,6 @@ import {
   createProjectAndFolder,
   deleteFile,
   deleteProject,
-  deleteTestCase,
 } from "../services/api";
 import { useNotification } from "../components/common/NotificationContext";
 
@@ -12,8 +11,6 @@ export const useSideBarManager = (onRefresh: () => Promise<void>) => {
   const [activeProjectId, setActiveProjectId] = useState<string | undefined>();
 
   const { showNotification } = useNotification();
-
-
 
   const handleOpenProjectDialog = (projectId?: string) => {
     setActiveProjectId(projectId);
@@ -65,8 +62,6 @@ export const useSideBarManager = (onRefresh: () => Promise<void>) => {
       console.error("Error deleting file", err);
     }
   };
-
-
 
   return {
     isProjectDialogOpen,
