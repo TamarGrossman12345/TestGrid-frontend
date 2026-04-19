@@ -43,14 +43,13 @@ const TestCaseDialog = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // בדיקה ש-onSave אכן הועבר כפרופ
     if (onSave) {
       onSave({
-        title: formData.title,
-        testSteps: formData.testSteps,
-        expectedResults: formData.expectedResults,
+        title: formData.title.trim(),
+        testSteps: formData.testSteps.trim(),
+        expectedResults: formData.expectedResults.trim(),
         status: initialTestData?.status || "pending",
-      } as TestCase);
+      });
     }
 
     // הערה: עדיף שה-onClose יקרה ב-WorkSpace רק אחרי שה-API מחזיר תשובה חיובית,

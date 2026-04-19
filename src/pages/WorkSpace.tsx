@@ -52,21 +52,35 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
       message,
       onConfirm: async () => {
         try {
-          if (type === "project") await projectManager.handleDeleteProject(id);
-          if (type === "folder") await projectManager.handleDeleteFolder(id);
+          if (type === "project") {
+            await projectManager.handleDeleteProject(id);
+            if (openProject === id) {
+              setOpenProject(null);
+              setActiveFolderId(undefined);
+              setActiveTestCases([]);
+            }
+          }
+          if (type === "folder") {
+            await projectManager.handleDeleteFolder(id);
+            if (activeFolderId === id) {
+              setActiveFolderId(undefined);
+              setActiveTestCases([]);
+            }
+          }
           if (type === "testCase") {
             await projectManager.handleDeleteTestCase(id);
             testCasesManger.setSelectedTest(null);
-            if (activeFolderId) handleFolderClick(activeFolderId);
+
           }
-        } catch (error) {
-          console.error("Delete failed", error);
+        } catch(err) {
+          console.log(err);
         }
       },
     });
-  };
+  }
+  
 
-  const handleFolderClick = async (fileId: string) => {a se
+  const handleFolderClick = async (fileId: string) => {
     try {
       const response = await getTestCasesFromFile(fileId);
       setActiveTestCases(response.data);
