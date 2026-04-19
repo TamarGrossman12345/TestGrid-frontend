@@ -32,7 +32,7 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const testCasesManger = useTestCasesManager();
   const { showNotification } = useNotification();
 
-  const [activeTestCases, setActiveTestCases] = useState<TestCase[]>([]);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
 
@@ -56,18 +56,18 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
             if (openProject === id) {
               setOpenProject(null);
               setActiveFolderId(undefined);
-              setActiveTestCases([]);
+              testCasesManger.setActiveTestCases([]);
             }
           }
           if (type === "folder") {
             await projectManager.handleDeleteFolder(id);
             if (activeFolderId === id) {
               setActiveFolderId(undefined);
-              setActiveTestCases([]);
+              testCasesManger.setActiveTestCases([]);
             }
           }
           if (type === "testCase") {
-            await projectManager.handleDeleteTestCase(id);
+            await testCasesManger.handleDeleteTestCase(id);
             testCasesManger.setSelectedTest(null);
           }
         } catch (err) {
@@ -81,7 +81,7 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const handleFolderClick = async (fileId: string) => {
     try {
       const response = await getTestCasesFromFile(fileId);
-      setActiveTestCases(response.data);
+      testCasesManger.setActiveTestCases(response.data);
       setActiveFolderId(fileId);
     } catch (error) {
       console.error("Error fetching test cases:", error);
@@ -93,7 +93,7 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   };
 
   const filteredTestCases = useMemo(() => {
-    return activeTestCases.filter((tc) => {
+    return testCasesManger.activeTestCases.filter((tc) => {
       const matchesSearch =
         tc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         tc.TestCaseId.toLowerCase().includes(searchQuery.toLowerCase());
@@ -101,17 +101,17 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
         filterStatus === "all" || tc.status === filterStatus;
       return matchesSearch && matchesFilter;
     });
-  }, [activeTestCases, searchQuery, filterStatus]);
+  }, [testCasesManger.activeTestCases, searchQuery, filterStatus]);
 
   const stats = useMemo(() => {
     return {
-      total: activeTestCases.length,
-      pass: activeTestCases.filter((t) => t.status === "pass").length,
-      fail: activeTestCases.filter((t) => t.status === "fail").length,
-      inProgress: activeTestCases.filter((t) => t.status === "in-progress")
+      total: testCasesManger.activeTestCases.length,
+      pass: testCasesManger.activeTestCases.filter((t) => t.status === "pass").length,
+      fail: testCasesManger.activeTestCases.filter((t) => t.status === "fail").length,
+      inProgress: testCasesManger.activeTestCases.filter((t) => t.status === "in-progress")
         .length,
     };
-  }, [activeTestCases]);
+  }, [testCasesManger.activeTestCases]);
 
   const activeProjectName = useMemo(() => {
     if (openProject === null) return "All Projects";

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNotification } from "../components/common/NotificationContext";
-import { createTestCase, updateTestCase } from "../services/api";
+import { createTestCase, deleteTestCase, updateTestCase } from "../services/api";
 import { TestCase, TestStatus } from "../types";
 
 export const useTestCasesManager = () => {
   const { showNotification } = useNotification();
   const [showTestCaseDialog, setShowTestCaseDialog] = useState(false);
   const [selectedTest, setSelectedTest] = useState<TestCase | null>(null);
+    const [activeTestCases, setActiveTestCases] = useState<TestCase[]>([]);
 
   const handleTestCaseCreation = async (
     testData: Partial<TestCase>,
@@ -54,6 +55,17 @@ export const useTestCasesManager = () => {
       console.error("Failed to update test case", error);
     }
   };
+    const handleDeleteTestCase = async (testCaseId: string) => {
+    try {
+      await deleteTestCase(testCaseId);
+      showNotification("test case deleted successfully!", "success");
+      // await onRefresh();
+    } catch (err) {
+      showNotification("failed to delete test case!", "error");
+      console.error("Error deleting file", err);
+    }
+  };
+  
 
   return {
     handleTestCaseCreation,
@@ -63,5 +75,8 @@ export const useTestCasesManager = () => {
     handleSaveEdit,
     setSelectedTest,
     selectedTest,
+    handleDeleteTestCase,
+    activeTestCases,
+    setActiveTestCases,
   };
 };

@@ -66,16 +66,7 @@ export const useSideBarManager = (onRefresh: () => Promise<void>) => {
     }
   };
 
-  const handleDeleteTestCase = async (testCaseId: string) => {
-    try {
-      await deleteTestCase(testCaseId);
-      showNotification("test case deleted successfully!", "success");
-      await onRefresh();
-    } catch (err) {
-      showNotification("failed to delete test case!", "error");
-      console.error("Error deleting file", err);
-    }
-  };
+
 
   return {
     isProjectDialogOpen,
@@ -85,6 +76,5 @@ export const useSideBarManager = (onRefresh: () => Promise<void>) => {
     handleCreateProjectAndFolder,
     handleDeleteProject,
     handleDeleteFolder,
-    handleDeleteTestCase,
   };
 };

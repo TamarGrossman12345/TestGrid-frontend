@@ -21,7 +21,7 @@ interface TestCaseDialogProps {
   initialTestData?: TestCase | null;
   onDelete?: () => void;
 }
-// צריך להוסיף פונקציה לשמירה כשנוסיף את הבאקקק
+
 const TestCaseDialog = ({
   onClose,
   onSave,
