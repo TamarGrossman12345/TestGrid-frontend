@@ -1,5 +1,5 @@
 // src/pages/Dashboard.tsx
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, act } from "react";
 import { Alert, Box, Snackbar } from "@mui/material";
 import Sidebar from "../components/layout/Sidebar";
 import StatsFooter from "../components/Workspace/StatsFooter";
@@ -11,13 +11,12 @@ import NewProjectAndFolderDialog from "../components/Workspace/NewProjectAndFold
 import { useSideBarManager } from "../hooks/useSideBarManager";
 import WorkspaceHeader from "../components/Workspace/WorkspaceHeader";
 import {
-  createTestCase,
   getTestCasesFromFile,
-  updateTestCase,
 } from "../services/api";
 import AlertNotice from "../components/common/AlertNotice";
 import { DELETE_CONFIGS } from "../constants/deleteConfigs";
 import { useNotification } from "../components/common/NotificationContext";
+import { useTestCasesManager } from "../hooks/useTestCasesManager";
 
 interface WorkSpaceProps {
   projects: Project[];
@@ -32,18 +31,17 @@ export type DeleteConfig = {
 
 export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const projectManager = useSideBarManager(onRefreshProjects);
-  const { showNotification } = useNotification();
+  const testCasesManger = useTestCasesManager();
+
   const [activeTestCases, setActiveTestCases] = useState<TestCase[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [showTestCaseDialog, setShowTestCaseDialog] = useState(false);
 
   const [openProject, setOpenProject] = useState<string | null>(null);
 
   const [activeFolderId, setActiveFolderId] = useState<string | undefined>();
 
   const [deleteConfig, setDeleteConfig] = useState<DeleteConfig>(null);
-  const [selectedTest, setSelectedTest] = useState<TestCase | null>(null);
 
   const triggerDelete = (type: keyof typeof DELETE_CONFIGS, id: string) => {
     const { title, message } = DELETE_CONFIGS[type];
@@ -58,7 +56,7 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
           if (type === "folder") await projectManager.handleDeleteFolder(id);
           if (type === "testCase") {
             await projectManager.handleDeleteTestCase(id);
-            setSelectedTest(null);
+            testCasesManger.setSelectedTest(null);
             if (activeFolderId) handleFolderClick(activeFolderId);
           }
         } catch (error) {
@@ -68,7 +66,7 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
     });
   };
 
-  const handleFolderClick = async (fileId: string) => {
+  const handleFolderClick = async (fileId: string) => {a se
     try {
       const response = await getTestCasesFromFile(fileId);
       setActiveTestCases(response.data);
@@ -80,49 +78,6 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
 
   const handleProjectClick = (id: string) => {
     setOpenProject(openProject === id ? null : id);
-  };
-
-  const handleTestCaseCreation = async (testData: Partial<TestCase>) => {
-    try {
-      await createTestCase(
-        activeFolderId!,
-        testData.title!,
-        testData.testSteps!,
-        testData.expectedResults!,
-        testData.status!,
-      );
-      showNotification("test case created successfully!", "success");
-      if (activeFolderId) handleFolderClick(activeFolderId);
-    } catch (err: any) {
-      showNotification("failed to create test case!", "error");
-    }
-  };
-
-  const handleStatusChange = async (
-    testCaseId: string,
-    newStatus: TestStatus,
-  ) => {
-    try {
-      await updateTestCase(testCaseId, { status: newStatus });
-      showNotification("test case status updated successfully!", "success");
-      if (activeFolderId) handleFolderClick(activeFolderId);
-    } catch (error) {
-      showNotification("failed to update test case status!", "error");
-      console.error("Failed to update status", error);
-    }
-  };
-
-  const handleSaveEdit = async (updatedData: Partial<TestCase>) => {
-    if (!selectedTest) return;
-    try {
-      await updateTestCase(selectedTest.TestCaseId, updatedData);
-      showNotification("test case updated successfully!", "success");
-      if (activeFolderId) handleFolderClick(activeFolderId);
-      setSelectedTest(null);
-    } catch (error) {
-      showNotification("failed to update test case!", "error");
-      console.error("Failed to update test case", error);
-    }
   };
 
   const filteredTestCases = useMemo(() => {
@@ -196,7 +151,7 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
             testCasesCount={filteredTestCases.length}
             activeFolderId={activeFolderId}
             onSync={() => activeFolderId && handleFolderClick(activeFolderId)}
-            onNewTest={() => setShowTestCaseDialog(true)}
+            onNewTest={() => testCasesManger.setShowTestCaseDialog(true)}
           />
 
           <FilterBar
@@ -211,8 +166,8 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
           <Box sx={{ flexGrow: 1, overflow: "auto", p: 3 }}>
             <TestGrid
               testCases={filteredTestCases}
-              onStatusChange={handleStatusChange}
-              onEditTest={setSelectedTest}
+              onStatusChange={testCasesManger.handleStatusChange}
+              onEditTest={testCasesManger.setSelectedTest}
               isFolderActive={activeFolderId}
             />
           </Box>
@@ -220,16 +175,31 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
           <StatsFooter {...stats} />
         </Box>
         <TestCaseDialog
-          open={showTestCaseDialog || Boolean(selectedTest)}
-          initialTestData={selectedTest}
+          open={
+            testCasesManger.showTestCaseDialog ||
+            Boolean(testCasesManger.selectedTest)
+          }
+          initialTestData={testCasesManger.selectedTest}
           onClose={() => {
-            setShowTestCaseDialog(false);
-            setSelectedTest(null);
+            testCasesManger.setShowTestCaseDialog(false);
+            testCasesManger.setSelectedTest(null);
           }}
-          onSave={selectedTest ? handleSaveEdit : handleTestCaseCreation}
+          onSave={
+            testCasesManger.selectedTest
+              ? testCasesManger.handleSaveEdit
+              : (testData) =>
+                  testCasesManger.handleTestCaseCreation(
+                    testData,
+                    activeFolderId,
+                  )
+          }
           onDelete={
-            selectedTest
-              ? () => triggerDelete("testCase", selectedTest.TestCaseId)
+            testCasesManger.selectedTest
+              ? () =>
+                  triggerDelete(
+                    "testCase",
+                    testCasesManger.selectedTest!.TestCaseId,
+                  )
               : undefined
           }
         />

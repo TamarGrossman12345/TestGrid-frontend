@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -9,22 +9,23 @@ import {
   Button,
   Box,
   Typography,
-} from '@mui/material';
-import { X, FolderPlus, Folder, FileText } from 'lucide-react';
-import { Project } from '../../types';
+} from "@mui/material";
+import { X, Folder, FileText } from "lucide-react";
+
 
 interface NewProjectAndFolderDialogProps {
   onClose: () => void;
   onSave: (name: string, description: string, projectId?: string) => void;
-  projectId?: string; // אם קיים, אנחנו יוצרים תיקייה בתוך פרויקט
+  projectId?: string; 
 }
 
-
-
-
- function NewProjectAndFolderDialog({ onClose, onSave, projectId }: NewProjectAndFolderDialogProps) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+function NewProjectAndFolderDialog({
+  onClose,
+  onSave,
+  projectId,
+}: NewProjectAndFolderDialogProps) {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
 
   const isFolder = Boolean(projectId);
 
@@ -32,40 +33,51 @@ interface NewProjectAndFolderDialogProps {
     e.preventDefault();
     onSave(name, description, projectId);
     onClose();
-
   };
 
   return (
     <Dialog
       open
       onClose={onClose}
-      maxWidth="xs" 
+      maxWidth="xs"
       fullWidth
       PaperProps={{ sx: { borderRadius: 3 } }}
     >
       <form onSubmit={handleSubmit}>
         <DialogTitle sx={{ pt: 3 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              <Box sx={{ 
-                p: 1, 
-                bgcolor: 'primary.light', 
-                borderRadius: 1.5,
-                color: 'white',
-                display: 'flex' 
-              }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+              <Box
+                sx={{
+                  p: 1,
+                  bgcolor: "primary.light",
+                  borderRadius: 1.5,
+                  color: "white",
+                  display: "flex",
+                }}
+              >
                 {isFolder ? <Folder size={20} /> : <FileText size={20} />}
               </Box>
               <Typography variant="h6" fontWeight="700">
-                {isFolder ? 'Add New Folder' : 'New Project'}
+                {isFolder ? "Add New Folder" : "New Project"}
               </Typography>
             </Box>
-            <IconButton onClick={onClose} size="small"><X size={18} /></IconButton>
+            <IconButton onClick={onClose} size="small">
+              <X size={18} />
+            </IconButton>
           </Box>
         </DialogTitle>
 
         <DialogContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, mt: 1 }}>
+          <Box
+            sx={{ display: "flex", flexDirection: "column", gap: 2.5, mt: 1 }}
+          >
             <TextField
               fullWidth
               label={isFolder ? "Folder Name" : "Project Name"}
@@ -86,14 +98,21 @@ interface NewProjectAndFolderDialogProps {
         </DialogContent>
 
         <DialogActions sx={{ p: 3, pt: 1 }}>
-          <Button onClick={onClose} color="inherit">Cancel</Button>
-          <Button 
-            type="submit" 
-            variant="contained" 
+          <Button onClick={onClose} color="inherit">
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
             disableElevation
-            sx={{ borderRadius: 2, px: 3, textTransform: 'none', fontWeight: 600 }}
+            sx={{
+              borderRadius: 2,
+              px: 3,
+              textTransform: "none",
+              fontWeight: 600,
+            }}
           >
-            {isFolder ? 'Create Folder' : 'Create Project'}
+            {isFolder ? "Create Folder" : "Create Project"}
           </Button>
         </DialogActions>
       </form>
@@ -101,4 +120,4 @@ interface NewProjectAndFolderDialogProps {
   );
 }
 
-export default  NewProjectAndFolderDialog;
+export default NewProjectAndFolderDialog;

@@ -17,7 +17,7 @@ import { TestCase } from "../../types";
 interface TestCaseDialogProps {
   open: boolean;
   onClose: () => void;
-  onSave?: (testData: TestCase) => void;
+  onSave?: (testData: Partial<TestCase>) => void;
   initialTestData?: TestCase | null;
   onDelete?: () => void;
 }

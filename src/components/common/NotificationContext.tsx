@@ -20,12 +20,10 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
     message: string,
     severity: AlertColor = "success",
   ) => {
-    console.log("Notification Triggered:", message);
     setSnackbar({ open: true, message, severity });
   };
 
   const handleClose = () => setSnackbar((prev) => ({ ...prev, open: false }));
-  console.log("Provider Rendered!");
   return (
     <NotificationContext.Provider value={{ showNotification }}>
       {children}
