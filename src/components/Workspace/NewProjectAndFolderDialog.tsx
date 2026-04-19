@@ -33,6 +33,8 @@ function NewProjectAndFolderDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave(name, description, projectId);
+    setName("");
+    setDescription("");
     onClose();
   };
 
