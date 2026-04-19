@@ -5,26 +5,15 @@ import {
   deleteProject,
   deleteTestCase,
 } from "../services/api";
+import { useNotification } from "../components/common/NotificationContext";
 
 export const useSideBarManager = (onRefresh: () => Promise<void>) => {
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
   const [activeProjectId, setActiveProjectId] = useState<string | undefined>();
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success" as "success" | "error",
-  });
 
-  const triggerSnackbar = (
-    message: string,
-    severity: "success" | "error" = "success",
-  ) => {
-    setSnackbar({ open: true, message, severity });
-  };
+  const { showNotification } = useNotification();
 
-  const handleCloseSnackbar = () => {
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
+
 
   const handleOpenProjectDialog = (projectId?: string) => {
     setActiveProjectId(projectId);
@@ -44,10 +33,10 @@ export const useSideBarManager = (onRefresh: () => Promise<void>) => {
     try {
       await createProjectAndFolder(name, description, projectId);
       handleCloseProjectDialog();
-      triggerSnackbar("project/folder created successfully!");
+      showNotification("project/folder created successfully!", "success");
       await onRefresh();
     } catch (err: any) {
-      triggerSnackbar(" error in creating project/folder");
+      showNotification("failed to create project/folder!", "error");
       console.error(
         "Error creating folder/project",
         err.response?.data || err.message,
@@ -58,10 +47,10 @@ export const useSideBarManager = (onRefresh: () => Promise<void>) => {
   const handleDeleteProject = async (projectId: string) => {
     try {
       await deleteProject(projectId);
-      triggerSnackbar("project deleted successfully!");
+      showNotification("project deleted successfully!", "success");
       await onRefresh();
     } catch (err) {
-      triggerSnackbar("failed to delete project!");
+      showNotification("failed to delete project!", "error");
       console.error("Error deleting project", err);
     }
   };
@@ -69,21 +58,21 @@ export const useSideBarManager = (onRefresh: () => Promise<void>) => {
   const handleDeleteFolder = async (testFileId: string) => {
     try {
       await deleteFile(testFileId);
-      triggerSnackbar("folder deleted successfully!");
+      showNotification("folder deleted successfully!", "success");
       await onRefresh();
     } catch (err) {
-      triggerSnackbar("failed to delete folder!");
+      showNotification("failed to delete folder!", "error");
       console.error("Error deleting file", err);
     }
   };
 
-    const handleDeleteTestCase = async (testCaseId: string) => {
+  const handleDeleteTestCase = async (testCaseId: string) => {
     try {
       await deleteTestCase(testCaseId);
-      triggerSnackbar("test case deleted successfully!");
+      showNotification("test case deleted successfully!", "success");
       await onRefresh();
     } catch (err) {
-      triggerSnackbar("failed to delete test case!");
+      showNotification("failed to delete test case!", "error");
       console.error("Error deleting file", err);
     }
   };
@@ -96,11 +85,6 @@ export const useSideBarManager = (onRefresh: () => Promise<void>) => {
     handleCreateProjectAndFolder,
     handleDeleteProject,
     handleDeleteFolder,
-    handleCloseSnackbar,
-    snackbar,
-    triggerSnackbar,
     handleDeleteTestCase,
   };
-}
-
-
+};

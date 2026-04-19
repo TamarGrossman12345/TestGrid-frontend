@@ -1,9 +1,8 @@
-import { Button, Container, Typography } from "@mui/material";
 import { WorkSpace } from "./pages/WorkSpace";
-import { theme } from "./theme/theme";
-import { ThemeProvider } from "@mui/material/styles";
+
 import { useEffect, useState } from "react";
 import { getAllProjects } from "./services/api";
+import { NotificationProvider } from "./components/common/NotificationContext";
 
 function App() {
   const [projects, setProjects] = useState([]);
@@ -22,12 +21,9 @@ function App() {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <WorkSpace
-        projects={projects}
-        onRefreshProjects={fetchProjects}
-      />
-    </ThemeProvider>
+    <NotificationProvider>
+      <WorkSpace projects={projects} onRefreshProjects={fetchProjects} />
+    </NotificationProvider>
   );
 }
 

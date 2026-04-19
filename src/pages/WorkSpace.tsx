@@ -12,11 +12,12 @@ import { useSideBarManager } from "../hooks/useSideBarManager";
 import WorkspaceHeader from "../components/Workspace/WorkspaceHeader";
 import {
   createTestCase,
-  deleteTestCase,
   getTestCasesFromFile,
   updateTestCase,
 } from "../services/api";
 import AlertNotice from "../components/common/AlertNotice";
+import { DELETE_CONFIGS } from "../constants/deleteConfigs";
+import { useNotification } from "../components/common/NotificationContext";
 
 interface WorkSpaceProps {
   projects: Project[];
@@ -31,7 +32,7 @@ export type DeleteConfig = {
 
 export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const projectManager = useSideBarManager(onRefreshProjects);
-
+  const { showNotification } = useNotification();
   const [activeTestCases, setActiveTestCases] = useState<TestCase[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -44,36 +45,29 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const [deleteConfig, setDeleteConfig] = useState<DeleteConfig>(null);
   const [selectedTest, setSelectedTest] = useState<TestCase | null>(null);
 
-  const triggerDeleteProject = (projectId: string) => {
+  const triggerDelete = (type: keyof typeof DELETE_CONFIGS, id: string) => {
+    const { title, message } = DELETE_CONFIGS[type];
+
     setDeleteConfig({
       isOpen: true,
-      title: "Do you want to delete this project? ",
-      message: "All folders and test cases inside will be lost forever.",
-      onConfirm: () => projectManager.handleDeleteProject(projectId),
-    });
-  };
-    const triggerDeleteTestCase = (testCaseId: string) => {
-    setDeleteConfig({
-      isOpen: true,
-      title: "Do you want to delete this test case? ",
-      message: "All the information inside will be lost forever.",
+      title,
+      message,
       onConfirm: async () => {
-        projectManager.handleDeleteTestCase(testCaseId);
-        setSelectedTest(null);
-        if (activeFolderId) handleFolderClick(activeFolderId);
-        
+        try {
+          if (type === "project") await projectManager.handleDeleteProject(id);
+          if (type === "folder") await projectManager.handleDeleteFolder(id);
+          if (type === "testCase") {
+            await projectManager.handleDeleteTestCase(id);
+            setSelectedTest(null);
+            if (activeFolderId) handleFolderClick(activeFolderId);
+          }
+        } catch (error) {
+          console.error("Delete failed", error);
+        }
       },
     });
   };
 
-  const triggerDeleteFolder = (folderId: string) => {
-    setDeleteConfig({
-      isOpen: true,
-      title: "Do you want to delete this folder? ",
-      message: "All the test cases inside will be lost forever.",
-      onConfirm: () => projectManager.handleDeleteFolder(folderId),
-    });
-  };
   const handleFolderClick = async (fileId: string) => {
     try {
       const response = await getTestCasesFromFile(fileId);
@@ -97,12 +91,13 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
         testData.expectedResults!,
         testData.status!,
       );
-      projectManager.triggerSnackbar("test case created successfully!");
+      showNotification("test case created successfully!", "success");
       if (activeFolderId) handleFolderClick(activeFolderId);
     } catch (err: any) {
-      projectManager.triggerSnackbar("failed to create test case!");
+      showNotification("failed to create test case!", "error");
+
+    }
   };
-}
 
   const handleStatusChange = async (
     testCaseId: string,
@@ -126,8 +121,6 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
       console.error("Failed to update test case", error);
     }
   };
-
-
 
   const filteredTestCases = useMemo(() => {
     return activeTestCases.filter((tc) => {
@@ -172,8 +165,8 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
             projects={projects}
             openProject={openProject}
             handleProjectClick={handleProjectClick}
-            handleDeleteFolder={triggerDeleteFolder}
-            handleDeleteProject={triggerDeleteProject}
+            handleDeleteFolder={(id) => triggerDelete("folder", id)}
+            handleDeleteProject={(id) => triggerDelete("project", id)}
             onAddNewProject={() => projectManager.handleOpenProjectDialog()}
             onAddNewFolder={(id) => projectManager.handleOpenProjectDialog(id)}
             handleFolderClick={handleFolderClick}
@@ -234,7 +227,7 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
             initialTestData={selectedTest}
             onClose={() => setSelectedTest(null)}
             onSave={handleSaveEdit}
-            onDelete={() => triggerDeleteTestCase(selectedTest.TestCaseId)}
+            onDelete={() => triggerDelete("testCase", selectedTest.TestCaseId)}
           />
         )}
       </Box>
@@ -250,42 +243,8 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
           }}
         />
       )}
-      <Snackbar
-        open={projectManager.snackbar.open}
-        autoHideDuration={3000} // ייסגר לבד אחרי 4 שניות
-        onClose={projectManager.handleCloseSnackbar}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }} // מיקום
-      >
-        <Alert
-          onClose={projectManager.handleCloseSnackbar}
-          severity={projectManager.snackbar.severity}
-          variant="filled" 
-          sx={{
-            width: "100%",
-            borderRadius: "12px",
-            fontWeight: 600,
-            fontSize: "0.95rem",
-            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.15)",
-
-            "&.MuiAlert-filledSuccess": {
-              bgcolor: "primary.main", 
-            },
-            "&.MuiAlert-filledError": {
-              bgcolor: "error.main", 
-            },
-
-            // עיצוב האייקון
-            "& .MuiAlert-icon": {
-              fontSize: 22,
-              opacity: 0.9,
-            },
-          }}
-        >
-          {projectManager.snackbar.message}
-        </Alert>
-      </Snackbar>
     </>
   );
-  };
+};
 
-  export default WorkSpace;
+export default WorkSpace;
