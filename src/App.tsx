@@ -1,8 +1,22 @@
-import { WorkSpace } from "./pages/WorkSpace";
-
 import { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { getAllProjects } from "./services/api";
-import { NotificationProvider } from "./components/common/NotificationContext";
+import { NotificationProvider } from "./context/NotificationContext";
+import { AuthProvider, useAuth } from "./context/AuthContext"; // הנחת יסוד שיצרת את הקובץ
+import { WorkSpace } from "./pages/WorkSpace";
+import { LoginScreen } from "./pages/LoginScreen";
+
+// קומפוננטה ששומרת על הנתיבים המוגנים
+// const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+//   const { isAuthenticated } = useAuth();
+
+//   // אם המשתמש לא מחובר, הוא נזרק לדף ההתחברות
+//   if (!isAuthenticated) {
+//     return <Navigate to="/login" />;
+//   }
+
+//   return <>{children}</>;
+// };
 
 function App() {
   const [projects, setProjects] = useState([]);
@@ -21,9 +35,29 @@ function App() {
   }, []);
 
   return (
-    <NotificationProvider>
-      <WorkSpace projects={projects} onRefreshProjects={fetchProjects} />
-    </NotificationProvider>
+    <BrowserRouter>
+      {/* <AuthProvider>  */}
+      <NotificationProvider>
+        <Routes>
+          <Route path="/login" element={<LoginScreen />} />
+
+          <Route
+            path="/workspace"
+            element={
+              // <ProtectedRoute>
+              <WorkSpace
+                projects={projects}
+                onRefreshProjects={fetchProjects}
+              />
+              // </ProtectedRoute>
+            }
+          />
+
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+      </NotificationProvider>
+      {/* </AuthProvider> */}
+    </BrowserRouter>
   );
 }
 

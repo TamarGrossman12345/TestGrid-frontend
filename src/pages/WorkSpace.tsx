@@ -13,7 +13,7 @@ import WorkspaceHeader from "../components/Workspace/WorkspaceHeader";
 import { getTestCasesFromFile } from "../services/api";
 import AlertNotice from "../components/common/AlertNotice";
 import { DELETE_CONFIGS } from "../constants/deleteConfigs";
-import { useNotification } from "../components/common/NotificationContext";
+import { useNotification } from "../context/NotificationContext";
 import { useTestCasesManager } from "../hooks/useTestCasesManager";
 
 interface WorkSpaceProps {

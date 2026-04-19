@@ -4,7 +4,7 @@ import {
   deleteFile,
   deleteProject,
 } from "../services/api";
-import { useNotification } from "../components/common/NotificationContext";
+import { useNotification } from "../context/NotificationContext";
 
 export const useSideBarManager = (onRefresh: () => Promise<void>) => {
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
