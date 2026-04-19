@@ -104,8 +104,10 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   ) => {
     try {
       await updateTestCase(testCaseId, { status: newStatus });
+      showNotification("test case status updated successfully!", "success");
       if (activeFolderId) handleFolderClick(activeFolderId);
     } catch (error) {
+      showNotification("failed to update test case status!", "error");
       console.error("Failed to update status", error);
     }
   };
@@ -114,9 +116,11 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
     if (!selectedTest) return;
     try {
       await updateTestCase(selectedTest.TestCaseId, updatedData);
+      showNotification("test case updated successfully!", "success");
       if (activeFolderId) handleFolderClick(activeFolderId);
       setSelectedTest(null);
     } catch (error) {
+      showNotification("failed to update test case!", "error");
       console.error("Failed to update test case", error);
     }
   };
@@ -216,7 +220,6 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
           <StatsFooter {...stats} />
         </Box>
         <TestCaseDialog
-  
           open={showTestCaseDialog || Boolean(selectedTest)}
           initialTestData={selectedTest}
           onClose={() => {

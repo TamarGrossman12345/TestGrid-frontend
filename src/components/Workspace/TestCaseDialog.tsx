@@ -39,8 +39,6 @@ const TestCaseDialog = ({
     expectedResults: initialTestData?.expectedResults || "",
   });
 
-  const isEditMode = Boolean(initialTestData);
-
   // צריך להוסיף שליחה לבאק אחרי ששומרים טסט קייס חדש
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -152,7 +150,7 @@ const TestCaseDialog = ({
         </DialogContent>
 
         <DialogActions sx={{ p: 3, pt: 1, display: "flex" }}>
-          {isEditMode && onDelete && (
+          {showDelete && onDelete && (
             <IconButton
               onClick={onDelete}
               sx={{
