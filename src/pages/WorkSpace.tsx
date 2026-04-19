@@ -1,6 +1,6 @@
 // src/pages/Dashboard.tsx
 import React, { useState, useMemo } from "react";
-import { Box } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import Sidebar from "../components/layout/Sidebar";
 import StatsFooter from "../components/Workspace/StatsFooter";
 import FilterBar from "../components/Workspace/FilterBar";
@@ -52,6 +52,19 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
       onConfirm: () => projectManager.handleDeleteProject(projectId),
     });
   };
+    const triggerDeleteTestCase = (testCaseId: string) => {
+    setDeleteConfig({
+      isOpen: true,
+      title: "Do you want to delete this test case? ",
+      message: "All the information inside will be lost forever.",
+      onConfirm: async () => {
+        projectManager.handleDeleteTestCase(testCaseId);
+        setSelectedTest(null);
+        if (activeFolderId) handleFolderClick(activeFolderId);
+        
+      },
+    });
+  };
 
   const triggerDeleteFolder = (folderId: string) => {
     setDeleteConfig({
@@ -84,14 +97,12 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
         testData.expectedResults!,
         testData.status!,
       );
+      projectManager.triggerSnackbar("test case created successfully!");
       if (activeFolderId) handleFolderClick(activeFolderId);
     } catch (err: any) {
-      console.error(
-        "Error creating test case:",
-        err.response?.data || err.message,
-      );
-    }
+      projectManager.triggerSnackbar("failed to create test case!");
   };
+}
 
   const handleStatusChange = async (
     testCaseId: string,
@@ -116,18 +127,7 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
     }
   };
 
-  const triggerDeleteTestCase = (testCaseId: string) => {
-    setDeleteConfig({
-      isOpen: true,
-      title: "Do you want to delete this test case? ",
-      message: "All the information inside will be lost forever.",
-      onConfirm: async () => {
-        await deleteTestCase(testCaseId);
-        setSelectedTest(null);
-        if (activeFolderId) handleFolderClick(activeFolderId);
-      },
-    });
-  };
+
 
   const filteredTestCases = useMemo(() => {
     return activeTestCases.filter((tc) => {
@@ -250,6 +250,42 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
           }}
         />
       )}
+      <Snackbar
+        open={projectManager.snackbar.open}
+        autoHideDuration={3000} // ייסגר לבד אחרי 4 שניות
+        onClose={projectManager.handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }} // מיקום
+      >
+        <Alert
+          onClose={projectManager.handleCloseSnackbar}
+          severity={projectManager.snackbar.severity}
+          variant="filled" 
+          sx={{
+            width: "100%",
+            borderRadius: "12px",
+            fontWeight: 600,
+            fontSize: "0.95rem",
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.15)",
+
+            "&.MuiAlert-filledSuccess": {
+              bgcolor: "primary.main", 
+            },
+            "&.MuiAlert-filledError": {
+              bgcolor: "error.main", 
+            },
+
+            // עיצוב האייקון
+            "& .MuiAlert-icon": {
+              fontSize: 22,
+              opacity: 0.9,
+            },
+          }}
+        >
+          {projectManager.snackbar.message}
+        </Alert>
+      </Snackbar>
     </>
   );
-};
+  };
+
+  export default WorkSpace;
