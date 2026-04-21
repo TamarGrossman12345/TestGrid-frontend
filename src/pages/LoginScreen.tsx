@@ -12,10 +12,15 @@ import {
   Link,
   InputAdornment,
   Container,
+  MenuItem,
+  Select,
+  OutlinedInput,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import GroupsIcon from "@mui/icons-material/Groups";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-import { LogIn, Mail, Lock, User } from "lucide-react";
+import { Lock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Logo from "../components/common/Logo";
@@ -33,8 +38,8 @@ export const LoginScreen = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // כאן בעתיד תבוא הקריאה האמיתית ל-Backend (axios.post...)
-    // console.log("מנסה להתחבר עם:", { username, password });
+    // כאן  תבוא הקריאה האמיתית ל-Backend 
+   
   };
 
   return (
@@ -85,43 +90,71 @@ export const LoginScreen = () => {
 
           <form onSubmit={handleSubmit}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+              {/* שדות שמופיעים רק בהרשמה */}
               {tabValue === 1 && (
                 <>
-                  <TextField
-                    fullWidth
-                    label="צוות"
-                    value={teamName}
-                    onChange={(e) => setTeamName(e.target.value)}
-                    required
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <GroupsIcon sx={{ fontSize: 20 }} />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="תפקיד"
-                    value={teamRole}
-                    onChange={(e) => setTeamRole(e.target.value)}
-                    required
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <User size={20} />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
+                  <FormControl fullWidth size="small">
+                    <InputLabel id="team-select-label">צוות</InputLabel>
+                    <Select
+                      labelId="team-select-label"
+                      label="צוות"
+                      value={teamName}
+                      onChange={(e) => setTeamName(e.target.value)}
+                      required
+                      input={
+                        <OutlinedInput
+                          label="צוות"
+                          startAdornment={
+                            <InputAdornment position="start">
+                              <GroupsIcon sx={{ fontSize: 20 }} />
+                            </InputAdornment>
+                          }
+                        />
+                      }
+                    >
+                      <MenuItem value="teamPrisma">פריזמה</MenuItem>
+                      <MenuItem value="teamNewSpace">ניו ספייס</MenuItem>
+                      <MenuItem value="teamNext">נקסט</MenuItem>
+                      <MenuItem value="teamNexsos">נקסוס</MenuItem>
+                      <MenuItem value="teamPlan">תכנון</MenuItem>
+                      <MenuItem value="teamPanorama">פנורמה</MenuItem>
+                      <MenuItem value="teamSDA">SDA</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <FormControl fullWidth size="small">
+                    <InputLabel id="role-select-label">תפקיד</InputLabel>
+                    <Select
+                      labelId="role-select-label"
+                      label="תפקיד"
+                      value={teamRole}
+                      onChange={(e) => setTeamRole(e.target.value)}
+                      required
+                      input={
+                        <OutlinedInput
+                          label="תפקיד"
+                          startAdornment={
+                            <InputAdornment position="start">
+                              <User size={20} />
+                            </InputAdornment>
+                          }
+                        />
+                      }
+                    >
+                      <MenuItem value="roleQA">בודק\ת תוכנה</MenuItem>
+                      <MenuItem value="roleDeveloper">מפתח\ת</MenuItem>
+                      <MenuItem value="roleTeamLeader">רשצ</MenuItem>
+                      <MenuItem value="roleHeadSection">רמד</MenuItem>
+                    </Select>
+                  </FormControl>
                 </>
               )}
 
+              {/* שדות שמופיעים תמיד (גם בהתחברות וגם בהרשמה) */}
               <TextField
                 fullWidth
+                size="small"
                 label="שם משתמש"
-                type="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -136,6 +169,7 @@ export const LoginScreen = () => {
 
               <TextField
                 fullWidth
+                size="small"
                 label="סיסמה"
                 type="password"
                 value={password}
@@ -155,6 +189,7 @@ export const LoginScreen = () => {
                 variant="contained"
                 size="large"
                 fullWidth
+                onClick={() => navigate("/workspace")}
                 sx={{
                   mt: 2,
                   py: 1.5,
