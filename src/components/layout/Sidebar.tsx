@@ -14,6 +14,7 @@ import ControlCenter from "./ControlCenter";
 import { DRAWER_WIDTH } from "../../theme/theme";
 import { Project } from "../../types/index";
 import ProjectAndFolderItem from "./ProjectAndFolderItem";
+import Logo from "../common/Logo";
 
 interface SidebarProps {
   projects: Project[];
@@ -50,23 +51,29 @@ const Sidebar = ({
         },
       }}
     >
-      <Box sx={{ p: 3, pb: 1 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 4 }}>
+      <Box sx={{ p: 1, pb: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Box
             sx={{
-              bgcolor: "primary.main",
-              p: 1,
-              borderRadius: 5,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              width: 160,
+              height: 100,
+              overflow: "hidden",
+              transition: "transform 0.3s ease",
+              "&:hover": { transform: "scale(1.1)" },
             }}
           >
-            <LayoutGrid color="white" size={22} />
+            <Logo />
           </Box>
-          <Typography variant="h5" fontWeight="bold">
-            TestGrid
-          </Typography>
         </Box>
 
         <ListItemButton
