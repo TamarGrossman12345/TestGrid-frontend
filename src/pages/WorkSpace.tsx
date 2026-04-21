@@ -33,13 +33,13 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
 
   const [activeFolderId, setActiveFolderId] = useState<string | undefined>();
 
-  const [alertNoticeConfig, setalertNoticeConfig] =
+  const [alertNoticeConfig, setAlertNoticeConfig] =
     useState<AlertNoticeConfig>(null);
 
   const triggerDelete = (type: keyof typeof DELETE_CONFIGS, id: string) => {
     const { title, message } = DELETE_CONFIGS[type];
 
-    setalertNoticeConfig({
+    setAlertNoticeConfig({
       isOpen: true,
       title,
       message,
@@ -155,6 +155,8 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
           }}
         >
           <WorkspaceHeader
+            projects={projects}
+            openProject = {openProject}
             activeProjectName={activeProjectName}
             testCasesCount={filteredTestCases.length}
             activeFolderId={activeFolderId}
@@ -217,10 +219,10 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
           open={alertNoticeConfig.isOpen}
           title={alertNoticeConfig.title}
           message={alertNoticeConfig.message}
-          onClose={() => setalertNoticeConfig(null)}
+          onClose={() => setAlertNoticeConfig(null)}
           onConfirm={async () => {
             await alertNoticeConfig.onConfirm();
-            setalertNoticeConfig(null);
+            setAlertNoticeConfig(null);
           }}
         />
       )}

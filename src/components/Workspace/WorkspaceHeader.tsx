@@ -1,5 +1,8 @@
 import { Box, Typography, Button } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
 import { RefreshCw, Plus } from "lucide-react";
+import { getFoldersByProjectId } from "../../services/api";
+import { Project } from "../../types";
 
 interface WorkspaceHeaderProps {
   activeProjectName: string;
@@ -7,6 +10,8 @@ interface WorkspaceHeaderProps {
   activeFolderId: string | undefined;
   onSync: () => void;
   onNewTest: () => void;
+  openProject: string | null;
+  projects: Project[];
 }
 
 const WorkspaceHeader = ({
@@ -15,6 +20,8 @@ const WorkspaceHeader = ({
   activeFolderId,
   onSync,
   onNewTest,
+  openProject,
+  projects,
 }: WorkspaceHeaderProps) => {
   const buttonDisableStyle = {
     "&.Mui-disabled": {
@@ -24,6 +31,15 @@ const WorkspaceHeader = ({
       border: "1px solid",
     },
   };
+
+  const activeFolderName = useMemo(() => {
+    if (!openProject || !activeFolderId) return "All Projects";
+    const currentProject = projects.find((p) => p.projectId === openProject);
+    const currentFolder = currentProject?.files?.find(
+      (f) => f.TestFileId === activeFolderId,
+    );
+    return currentFolder?.name || "Unknown Folder";
+  }, [openProject, activeFolderId, projects]);
 
   return (
     <Box
@@ -41,7 +57,7 @@ const WorkspaceHeader = ({
         </Typography>
         <Box sx={{ display: "flex", gap: 1.5 }}>
           <Typography variant="body2" color="text.secondary">
-            {activeProjectName}
+            {activeFolderName}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {testCasesCount} test cases found

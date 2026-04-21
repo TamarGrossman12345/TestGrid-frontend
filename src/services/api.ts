@@ -22,6 +22,17 @@ export const getTestCasesFromFile = (folderId: string) => {
   });
 };
 
+
+export const getFoldersByProjectId = (projectId: string) => {
+  return axios({
+    method: "GET",
+    url: `${baseURL}/api/folders/get-folders/${projectId}`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
 export const deleteProject = (projectId: string) => {
   return axios({
     method: "DELETE",
