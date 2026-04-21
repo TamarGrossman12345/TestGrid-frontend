@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import Sidebar from "../components/layout/Sidebar";
 import StatsFooter from "../components/Workspace/StatsFooter";
 import FilterBar from "../components/Workspace/FilterBar";
-import { Project } from "../types";
+import { AlertNoticeConfig, Project } from "../types";
 import TestGrid from "../components/Workspace/TestGrid";
 import TestCaseDialog from "../components/Workspace/TestCaseDialog";
 import NewProjectAndFolderDialog from "../components/Workspace/NewProjectAndFolderDialog";
@@ -20,12 +20,6 @@ interface WorkSpaceProps {
   projects: Project[];
   onRefreshProjects: () => Promise<void>;
 }
-export type DeleteConfig = {
-  isOpen: boolean;
-  message: string;
-  title: string;
-  onConfirm: () => Promise<void> | void;
-} | null;
 
 export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
   const projectManager = useSideBarManager(onRefreshProjects);
@@ -39,12 +33,13 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
 
   const [activeFolderId, setActiveFolderId] = useState<string | undefined>();
 
-  const [deleteConfig, setDeleteConfig] = useState<DeleteConfig>(null);
+  const [alertNoticeConfig, setalertNoticeConfig] =
+    useState<AlertNoticeConfig>(null);
 
   const triggerDelete = (type: keyof typeof DELETE_CONFIGS, id: string) => {
     const { title, message } = DELETE_CONFIGS[type];
 
-    setDeleteConfig({
+    setalertNoticeConfig({
       isOpen: true,
       title,
       message,
@@ -217,15 +212,15 @@ export const WorkSpace = ({ projects, onRefreshProjects }: WorkSpaceProps) => {
           }
         />
       </Box>
-      {deleteConfig && (
+      {alertNoticeConfig && (
         <AlertNotice
-          open={deleteConfig.isOpen}
-          title={deleteConfig.title}
-          message={deleteConfig.message}
-          onClose={() => setDeleteConfig(null)}
+          open={alertNoticeConfig.isOpen}
+          title={alertNoticeConfig.title}
+          message={alertNoticeConfig.message}
+          onClose={() => setalertNoticeConfig(null)}
           onConfirm={async () => {
-            await deleteConfig.onConfirm();
-            setDeleteConfig(null);
+            await alertNoticeConfig.onConfirm();
+            setalertNoticeConfig(null);
           }}
         />
       )}

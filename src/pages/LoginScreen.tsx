@@ -38,8 +38,7 @@ export const LoginScreen = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // כאן  תבוא הקריאה האמיתית ל-Backend 
-   
+    // כאן  תבוא הקריאה האמיתית ל-Backend
   };
 
   return (

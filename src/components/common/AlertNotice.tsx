@@ -14,6 +14,7 @@ interface AlertNoticeProps {
   onConfirm: () => void;
   title?: string;
   message: string;
+  confirmText?: string;
 }
 
 const AlertNotice = ({
@@ -22,6 +23,7 @@ const AlertNotice = ({
   onConfirm,
   title = "Are you sure?",
   message,
+  confirmText = "Delete",
 }: AlertNoticeProps) => {
   return (
     <Dialog
@@ -58,7 +60,7 @@ const AlertNotice = ({
           disableElevation
           sx={{ borderRadius: 2, bgcolor: "primary.main" }}
         >
-          Delete
+          {confirmText}
         </Button>
       </DialogActions>
     </Dialog>

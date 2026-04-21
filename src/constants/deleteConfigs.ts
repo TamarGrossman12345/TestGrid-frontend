@@ -11,4 +11,8 @@ export const DELETE_CONFIGS = {
     title: "Do you want to delete this test case?",
     message: "All the information inside will be lost forever.",
   },
+  logOut:{
+    title: "Are you sure you want to log out?",
+    message: " ",
+  }
 };

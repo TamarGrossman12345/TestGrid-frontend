@@ -37,3 +37,10 @@ export interface ActiveUser {
   user: User;
   cell: { rowId: string; columnId: string };
 }
+
+export type AlertNoticeConfig = {
+  isOpen: boolean;
+  message: string;
+  title: string;
+  onConfirm: () => Promise<void> | void;
+} | null;
