@@ -43,8 +43,9 @@ const FilterBar = ({
     textTransform: "none",
     fontWeight: 600,
     "&.Mui-disabled": {
-      color: theme.palette.text.disabled,
+      color: "secondary.main",
       opacity: 0.7,
+      borderColor: "secondary.main",
     },
   };
 

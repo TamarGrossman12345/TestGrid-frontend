@@ -1,7 +1,7 @@
 import { Box, Typography, Button } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { RefreshCw, Plus } from "lucide-react";
-import { getFoldersByProjectId } from "../../services/api";
+
 import { Project } from "../../types";
 
 interface WorkspaceHeaderProps {
